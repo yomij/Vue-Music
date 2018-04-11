@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>css实现层提示</title>
+<style>
+div{
+clear:both;
+margin:5px 0 0 0;
+font-size:12px;
+line-height:22px;
+}
+a.alt{
+position:relative;
+background-color:#fff;
+float:left;
+width:158px;height:20px;
+margin:0 auto;
+border:1px solid #eee;
+text-align:center;
+text-decoration:none;
+color:#0066cc;
+}
+a.alt:hover{
+background:#fff;
+text-decoration:none;z-index:2;
+}
+a.alt span{
+display:none;
+}
+a.alt:hover span{
+position:absolute;
+display:block;
+top:-1px;left:158px;
+width:130px;height:60px;
+border:1px solid #eee;
+z-index:1;
+}
+</style>
+</head>
+<body>
+<div>
+<a class='alt' href="/"><span>一个高品质脚本资料网站</span>脚本之家</a>
+</div>
+<div>
+<a class='alt' href="/"><span>给你实用的CSS代码</span>网页特效库</a>
+</div>
+</body>
+</html>
