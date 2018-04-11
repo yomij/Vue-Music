@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # yomi
 
 > A Vue.js project
@@ -28,3 +29,7 @@ npm test
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+=======
+# Vue-Music
+vue仿写网易云音乐
+>>>>>>> b6120dad8179d64e1cc64626cd8e7ac48a0c9c4b
