@@ -1,6 +1,6 @@
 <template>
   <div class="default-right" >
-    <v-nav></v-nav>
+    <v-nav class="nav"></v-nav>
     <router-view></router-view>
   </div>
 </template>
@@ -33,8 +33,12 @@ export default {
 .default-right{
   width:100%;
   height:100%;
-  padding:0 40px;
-  // background-color:red;
+  padding:0 30px;
+  // overflow:scroll;
+  .nav{
+    padding:0 10px;
+    margin:0 auto;
+  }
   .main-content{
     width:100px;
     height:100px;

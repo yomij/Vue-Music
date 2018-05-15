@@ -1,7 +1,17 @@
 <template>
   <div class="top">
-    <h3 class="logo">YomiMus</h3>
-    <search url="http://musicapi.leanapp.cn/search/suggest" defaultText="搜索音乐，歌手，歌词，用户" class="searchx"></search>
+    <h3 class="logo">
+      <router-link
+        class="link" 
+        :to="{path:'/'}">Music</router-link>
+    </h3>
+
+    <div class="navigation">
+      <i class="iconfont icon-jiantou_zuo" @click="back"></i>
+      <i class="iconfont icon-jiantou" @click="forward"></i>
+    </div>
+
+    <search defaultText="搜索音乐，歌手，歌词，用户" class="searchx"></search>
     <ul class="right">
       <li class="avatar"><img :src="avatar" alt=""></li>
       <li class="nickname">
@@ -67,6 +77,15 @@ export default {
     }
   },
   methods:{
+    back(){
+      console.log(this.$router);
+      console.log(this.$router.go(-1))
+
+    },
+    forward(){
+      console.log(this.$router);
+      this.$router.go(1)
+    },
     hideInfShow(){
       this.isHideInfShow = !this.isHideInfShow
     },
@@ -128,6 +147,32 @@ $topHeight:62px;
     left:20px;
     height:100%;
     // line-height:62px;
+    a{
+      color:#fff;
+    }
+  }
+  .navigation{
+    // width:62px;
+    position:absolute;
+    left:220px;
+    top:50%;
+    transform:translateY(-50%);
+    border:1px #a82828 solid;
+    border-radius:4px;
+    i{
+      display:inline-block;
+      // vertical-align:middle;
+      color:#fff;
+      font-size:20px;
+      font-weight:bold;
+      height:25px;
+      line-height:28px;
+      width:30px;
+      float:left;
+      &:last-child{
+        border-left:1px #a82828 solid;
+      }
+    }
   }
   .searchx{
     // position:relative;

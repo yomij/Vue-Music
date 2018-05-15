@@ -1,10 +1,12 @@
 <template>
   <div class="page">
-    <ul v-if="total > 20">
+    <ul v-if="total > onePageNum">
       <li class="tally-down icon" @click="tallyDown">
         <i class="iconfont icon-jiantou_zuo"></i>
       </li>
-      <li :class="{num: pageNum && index !== nowPageIndex , active: index === nowPageIndex }"v-for="(pageNum,index) in pages" @click=pageChange(pageNum,index)>
+      <li :class="{num: pageNum && index !== nowPageIndex , active: index  === nowPageIndex }"
+      v-for="(pageNum,index) in pages"
+      @click=pageChange(pageNum,index)>
         {{ pageNum ? pageNum : '...' }}
       </li>
       <li class="plus-one icon" @click="plusOne">
@@ -21,6 +23,10 @@ export default {
     total: {
       type: Number,
       default: 0
+    },
+    onePageNum: {
+      type: Number,
+      default: 20
     }
   },
   data () {
@@ -28,13 +34,17 @@ export default {
       pageCount: 0,
       pages: [],
       nowPageIndex: 0,
-      nowPageNum: 0
+      nowPageNum: 0,
+      timer: -1
     }
+  },
+  mounted(){
+    this.getPages(this.total)
   },
   methods: {
     transPage (num, index) {
       var pages,i
-      if (num < 6 || this.total < 200) {
+      if (num < 6 || this.total < this.onePageNum * 10) {
         this.nowPageIndex = index
         return [1, 2, 3, 4, 5, 6, 7, 8, 0, this.pageCount]
       }else if (num > this.pageCount - 6) {
@@ -44,7 +54,7 @@ export default {
           pages.push(i)
         }
         this.nowPageIndex = 9 - (this.pageCount - num)
-      }else if (num >= 6 && this.total >= 200) {
+      }else if (num >= 6 && this.total >= this.onePageNum * 10) {
         pages = [1, 0], i = num - 3
         for (; i <= num + 3; i++) {
           pages.push(i)
@@ -56,16 +66,17 @@ export default {
       return pages
     },
     pageChange (num, index) {
-      
+      console.log(num,index);
       if(this.nowPageNum === num){
         return
       }else{
         this.nowPageNum = num
-        if(this.total > 200){
+        if(this.total > this.onePageNum * 8){
           this.pages = this.transPage(num, index) //获取新的页码
-        }       
-        //分发事件,页码改变
-        this.$emit('pageChange', num)
+        }else if(num !== 0){
+          this.nowPageIndex = index
+        }
+        this.$emit('pageChange', num)      
       }
     },
     tallyDown () {
@@ -80,19 +91,27 @@ export default {
       }
       this.pageChange(this.nowPageNum + 1,this.nowPageIndex + 1)
     },
-  },
-  watch:{
-    total (val) {
+    getPages(val){
       var i = 1
       this.pages = []
-      this.pageCount = Math.ceil(val / 20)
-      if (val < 200) {
-        for (; i <= val / 20 + 1; i++) {
+      this.pageCount = Math.ceil(val / this.onePageNum)
+      if (val < this.onePageNum * 10) {
+        for (; i <= val / this.onePageNum + 1; i++) {
           this.pages.push(i)
         }
       } else {
         this.pages = [1, 2, 3, 4, 5, 6, 7, 8, 0, this.pageCount]
-      }
+      } 
+    },
+    init(){
+      this.pageCount = 0
+      this.nowPageIndex = 0
+      this.nowPageNum = 0
+    }
+  },
+  watch:{
+    total (val) {
+      this.getPages(val)
     },
   }
 }
@@ -129,7 +148,7 @@ export default {
       }
       &.active{
         text-decoration:underline;
-        color:$mainRed;
+        color:rgb(198,47,47);
       }
       &.icon{
         border:1px rgb(207,206,208) solid;

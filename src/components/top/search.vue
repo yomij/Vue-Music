@@ -1,12 +1,16 @@
+
 <template>
   <div class="search">
-
     <div class="search-box" :class="{focus:isSearching}">
-      <input @focus="test" @keydown="search"
-      @blur="leave" type="text" v-model="searchText" :class="{focus:isSearching||searchedText}">
+      <input
+      @focus="test"
+      @keydown="search"
+      @blur="leave"
+      type="text" v-model="searchText"
+      :class="{focus:isSearching||searchedText}">
       <i class="iconfont icon-search"></i>
     </div>
-
+    
     <div class="result-box" v-show="isChoose||isSearching" @mouseover="chooseResults" @mouseout="chooseResultsOver">
 
       <div class="search-results">
@@ -54,19 +58,20 @@
             <li class="search-tip"><i class="iconfont icon-liebiao icon"></i>歌单</li>
             <li
               v-for="item in searchResults.playlists"
+              @click="setPlaylist(item.id)"
               class="get-list"
               v-html="item.name"></li>
           </ul>
         </div>
-
       </div>
-
     </div>
-
   </div>
 </template>
 
 <script>
+
+import request from '../../request/request'
+
 export default {
   name: 'search',
   data () {
@@ -75,7 +80,7 @@ export default {
       isSearching: false,
       isChoose: false,
       timeout: null,
-      hotSearch: [...'虐欢我真的难受'],
+      hotSearch: ['yomi',...'是个大笨蛋'],
       searchResults: {},
       searchedText: ''
     }
@@ -84,10 +89,6 @@ export default {
     defaultText: {
       type: String,
       default: '输入要搜索的内容'
-    },
-    url: {
-      type: String,
-      default: 'http://localhost:3000/search/suggest'
     }
   },
   methods: {
@@ -101,29 +102,46 @@ export default {
     },
     chooseResults () {
       this.isChoose = true
-      // console.log('test'+this.isChoose );
     },
     chooseResultsOver () {
       this.isChoose = false
     },
-    search () {
-      console.log('test')
+    search (e) {
+      if(e.keyCode === 13 && this.searchText){
+        this.isSearching = false
+        this.$router.push({ name: 'resultSong', query: { st: this.searchText }})
+        return
+      }
       window.clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
         if (this.searchText && this.searchText !== this.defaultText) {
-          this.axios.get(`${this.url}?keywords=${this.searchText}`).then(res => {
-            console.log(`${this.url}?keywords=${this.searchText}`)
+          request.search({
+            keywords: this.searchText
+          }).then(res => {
             let result = JSON.stringify(res.data.result)
             result = result.replace(new RegExp(this.searchText, 'gm'), `<span style='color:#2EB7EB'>${this.searchText}</span>`)
             this.searchResults = JSON.parse(result)
           }).catch(e => {
             console.log(e)
           })
+
         }
       }, 300)
     },
     setSong (song) {
-      this.$store.dispatch('searchSongAndPlay', song.id)
+      request.songInf({
+        ids: song.id
+      }).then(res => {
+        song.album.picUrl = res.data.songs[0].al.picUrl
+        song.name = res.data.songs[0].name        
+        this.$store.dispatch('searchSongAndPlay', song) 
+      }).catch(() => {
+        console.log('搜索播放歌曲失败');
+      })
+    },
+    setPlaylist(id){
+      this.$store.commit('minimize')
+      this.$router.push({ name: 'songlist',query:{id:id}})
     }
   },
   directives: {}

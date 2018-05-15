@@ -1,10 +1,10 @@
 <template>
 	<div class="small-playing" @click.self="maximize">
-		<div class="song-pic" :style="{backgroundImage:'url(' + playingSong.al.picUrl + ')'}">	
+		<div class="song-pic" :style="{backgroundImage:'url(' + playingSong.album.picUrl + ')'}">	
 		</div>
 		<ul class="song-inf">
 			<li>{{playingSong.name}}</li>
-			<li>{{playingSong.ar[0].name}}</li>
+			<li>{{playingSong.artists[0].name}}</li>
 		</ul>
 		<ul class="op">
 			<li><i class="iconfont icon-cpxihuanxiantiao"></i></li>
@@ -18,20 +18,21 @@ export default {
 	name:'smallPlaying',
 	computed:{
 		playingSong(){
-			return this.$store.state.playingSong
+			let song = this.$store.state.playingSong
+			if(song.hasOwnProperty('mainSong')){
+				song = song.mainSong
+				this.isDJ = true
+				console.log('isDJ By playing');
+			}
+			return song
 		}
-	},
-	created(){
-		// console.log(this.playingSong.picUrl);
 	},
 	methods:{
 		maximize(el){
 			console.log('maximize');
 			this.$store.commit('maximize')
 		}
-	},
-
-
+	}
 }
 </script>
 

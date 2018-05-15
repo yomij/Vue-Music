@@ -3,20 +3,20 @@
 		<song-playing></song-playing>
 		<div class="bottom-container">
 
-			<div class="comments">
-				<div class="write-comment">
-					<div class="title">
-						<h2>听友评论</h2><span class="grayfont">(已有{{total}}条评论)</span>
-					</div>
-					<div class="write-bg">
-						<div class="write">
-							<i class="iconfont icon-iconset0137"></i>发表评论
-							<i class="iconfont icon-aite right"></i>
-							<i class="iconfont icon-smiling right"></i>
-
-						</div>
+			<div class="write-comment">
+				<div class="title">
+					<h2>听友评论</h2><span class="grayfont">(已有{{total}}条评论)</span>
+				</div>
+				<div class="write-bg">
+					<div class="write">
+						<i class="iconfont icon-iconset0137"></i>发表评论
+						<i class="iconfont icon-aite right"></i>
+						<i class="iconfont icon-smiling right"></i>
 					</div>
 				</div>
+			</div>
+
+			<div class="comments">
 		
 				<div class="brilliants" v-if="hotComments[0]">
 					<loader v-if="!dataReady" :bgc="'#6A6969'"></loader>
@@ -39,12 +39,12 @@
 				</div>
 			</div>
 
-			<div class="more-song-inf">
+			<div class="more-song-inf" v-if="!isDJ">
 				<div class="songlist-which-contain">
 					<h2 class="title">包含这首歌的歌单</h2>
 					<loader v-if="!dataReady" :bgc="'#6A6969'"></loader>
 					<ul v-if="dataReady">
-						<li class="songlist" v-for="songlist in similarSongList">
+						<li class="songlist" v-for="songlist in similarSongList" @click="songlistInf(songlist.id)">
 							<img :src="songlist.coverImgUrl">
 							<div class="list-inf">
 								<p>{{songlist.name}}</p>
@@ -61,7 +61,7 @@
 					<h2 class="title">相似歌曲</h2>
 					<loader v-if="!dataReady" :bgc="'#6A6969'"></loader>
 					<ul v-if="dataReady">
-						<li v-for="similarSong in similarSongs">
+						<li v-for="similarSong in similarSongs" @click="listen(similarSong)">
 							<p class="name">
 								{{similarSong.name}}<span class="grayfont" v-if="similarSong.alias[0]">({{similarSong.alias[0]}})</span>
 							</p>
@@ -70,10 +70,20 @@
 					</ul>
 				</div>
 
-				<div class="user-who-like">
+				<div class="user-who-like" v-if="similarUsers.length">
 					<h2 class="title">喜欢这首歌的人</h2>
-					<ul>
-						<!-- <li>我爱的人<span>(lllll	)</span></li> -->
+					<loader v-if="!dataReady" :bgc="'#6A6969'"></loader>
+					<ul v-if="dataReady">
+						<li class="user" v-for="(user,index) in similarUsers">
+          					<img :src="user.avatarUrl">
+          					<span class="nickname">
+          						{{user.nickname}}
+          						<i class="iconfont"
+          						v-if="user.gender"
+          						:class="{'icon-82':user.gender === 1,'icon-nv':user.gender === 2}"></i>
+          					</span>
+          					<span class="create-time">{{user.recommendReason}}</span>
+    					</li>
 					</ul>
 				</div>
 			</div>
@@ -85,9 +95,11 @@
 <script>
 
 import playing from './playing'
-import singleComment from './singleComment'
+import singleComment from '../../singleComment'
 import loader from '../../loader'
 import page from '../../page'
+
+import request from '../../../request/request'
 
 export default {
 	name: 'comment',
@@ -99,18 +111,28 @@ export default {
 	},
 	data () {
 		return {
-			hotComments: [],
-			latelyComments: [],
 			similarSongs: [],
 			similarUsers: [],
 			similarSongList: [],
+			hotComments: [],
+			latelyComments: [],
 			dataReady: true,
-			total: 0
+			total: 0,
+			commentsCache:{
+				length:0
+			},
+			isDJ:false
 		}
 	},
 	computed: {
-		playingSongId () {
-			return this.$store.state.playingSong.id
+		playingSong () {
+			if(this.$store.state.playingSong.hasOwnProperty('programId')){
+				this.isDJ = true
+			}else{
+				this.isDJ = false
+			}
+			console.log('playingSong Change');
+			return this.$store.state.playingSong
 		},
 		maximize () {
 			return this.$store.state.maximize
@@ -125,47 +147,86 @@ export default {
 			return names
 		},
 		
-		getData () {
+		getData (id) {
+			console.log('getData');
 			this.dataReady = false
-			this.axios.get(`http://musicapi.leanapp.cn/comment/music?id=${this.playingSongId}`).then((res)=>{
-				//获取评论
-				this.hotComments = res.data.hotComments
-				this.latelyComments = res.data.comments
-				this.total = res.data.total
-				this.dataReady = true
-				// console.log(JSON.stringify(res.data.comments));
-			}).then(()=>{
-				//获取相似歌单
-				this.axios.get(`http://musicapi.leanapp.cn/simi/playlist?id=${this.playingSongId}`).then(res =>{
+			if(!this.isDJ){
+				this.axios.get(`http://47.100.63.34:3000/comment/music?id=${id}`).then((res)=>{
+					console.log('get song comment',JSON.stringify(res.data));
+					this.hotComments = res.data.hotComments
+					this.latelyComments = res.data.comments
+					this.total = res.data.total
+					this.dataReady = true
+					return this.axios.get(`http://47.100.63.34:3000/simi/playlist?id=${id}`)
+				}).then((res)=>{
+					//获取相似歌单
 					this.similarSongList = res.data.playlists
-				}).then(() => {
-					this.axios.get(`http://musicapi.leanapp.cn/simi/song?id=${this.playingSongId}`).then(res => {
-						this.similarSongs = res.data.songs
-						// console.log(JSON.stringify(this.similarSongs));
-					})
+					return this.axios.get(`http://47.100.63.34:3000/simi/song?id=${id}`)
+				}).then((res) => {
+					this.similarSongs = res.data.songs
+					return this.axios.get(`http://47.100.63.34:3000/simi/user?id=${id}`)
+				}).then((res) => {
+					// this.similarUsers = res.data.userprofiles
+					if(res.data.userprofiles){
+						this.similarUsers = res.data.userprofiles
+					}				 
 				})
-			})
+			}else{
+				request.commentDj({
+					id: id
+				}).then((res)=>{
+					console.log('get dj comment',JSON.stringify(res.data));
+					this.hotComments = res.data.hotComments
+					this.latelyComments = res.data.comments
+					this.total = res.data.total
+					this.dataReady = true
+				})
+			}
+		
 		},
 		updateComment (page) {
-			this.axios.get(`http://musicapi.leanapp.cn/comment/music?id=${this.playingSongId}&limit=20&offset=${page - 1}`).then(res =>{
-
-          		//更新数据
-          		this.latelyComments = []
-          		res.data.comments.map( comment => {
-            		this.latelyComments.push(comment)
-          		})
-        	})
-		}
+			this.latelyComments = []
+			if(page in this.commentsCache){
+				this.latelyComments = this.commentsCache[page]
+			}else{
+				request.commentMusic({
+					id: this.playingSong.id,
+					limit: 20,
+					offset:(page - 1) * 20
+				}).then(res =>{
+					console.log('请求更新评论');
+	          		this.latelyComments = res.data.comments
+	          		this.commentsCache[page] = this.latelyComments
+        		})
+			}
+		},
+		listen(song){		
+			this.$store.commit('addSong',song)
+		},
+		songlistInf(id){
+			this.$store.commit('minimize')
+			console.log(id);
+      		this.$router.push({ name: 'songlist',query:{id:id}})
+    	}
 	},
 	watch:{
 		maximize (val) {
-			if (val) {
-				this.getData()			
+			if(!this.isDJ){
+				this.getData(this.playingSong.id)
+			}else{
+				this.getData(this.playingSong.programId)
 			}
 		},
-		playingSongId () {
+		playingSong (val) {
 			if (this.maximize) {
-				this.getData()	
+				console.log(val.programId);
+				if(!this.isDJ){
+					this.getData(val.id)
+					this.commentsCache = {}	
+				}else{
+					this.getData(val.programId)
+					this.commentsCache = {}	
+				}
 			}
 		}
 	}
@@ -191,7 +252,7 @@ export default {
 		padding:30px 95px;
 		.tag{
 			font-size:20px;
-			border-bottom:1px rgb(207,206,208) solid;
+			// border-bottom:1px rgb(207,206,208) solid;
 			padding-bottom:10px;
 			margin-bottom:5px;
 		}
@@ -207,41 +268,45 @@ export default {
 			border-bottom:1px rgb(207,206,208) solid;
 			padding-bottom:10px;
 		}
+
+		.write-comment{
+			float:left;
+			position:relative;
+			width:700px;
+			.write-bg{
+				position:relative;
+				height:60px;
+				width:100%;
+				background-color:rgb(240,240,242);
+				padding:12px;
+				margin-top:15px;
+				margin-bottom:30px;
+			}
+			.write{
+				height:36px;
+				width:100% -12;
+				box-shadow:1px 1px 1px $clickGray;
+				line-height:30px;
+				font-size:18px;
+				padding:5px;
+				// border:1px $clickGray solid;
+				background-color:#fff;
+				// transform:scale(.9,.9)
+				i{
+					font-size:18px;
+					line-height:30px;
+					margin-right:8px;
+					&.right{
+						float:right;
+					}
+				}
+			}
+				
+		}
 		.comments{
 			position:absolute;
 			width:700px;
-			.write-comment{
-				position:relative;
-				.write-bg{
-					position:relative;
-					height:60px;
-					width:100%;
-					background-color:rgb(240,240,242);
-					padding:12px;
-					margin-top:15px;
-					margin-bottom:30px;
-				}
-				.write{
-					height:36px;
-					width:100% -12;
-					box-shadow:1px 1px 1px $clickGray;
-					line-height:30px;
-					font-size:18px;
-					padding:5px;
-					// border:1px $clickGray solid;
-					background-color:#fff;
-					// transform:scale(.9,.9)
-					i{
-						font-size:18px;
-						line-height:30px;
-						margin-right:8px;
-						&.right{
-							float:right;
-						}
-					}
-				}
-				
-			}
+			top:200px;
 			
 			.brilliants{
 				.more{
@@ -313,6 +378,48 @@ export default {
 
 			.user-who-like{
 				margin-top:50px;
+				li.user{
+					cursor:pointer;
+					&:hover{
+						background-color:rgb(236,237,238);
+					}
+			        height:60px;
+			        line-height:60px;
+			        // margin:15px 0;
+			        img{
+			          	height:40px;
+			          	width:40px;
+			         	border-radius:50%;
+			         	display:inline-block;
+			         	vertical-align:middle;
+			        }
+			        span{
+			          	display:inline-block;
+			         	vertical-align:middle;
+			          	color:#7F7E7E;
+			          	overflow: hidden;
+					  	text-overflow:ellipsis;
+						white-space: nowrap;
+			          	&:last-child{
+			           		width:100px;
+			           		text-align:right;
+			          	}
+			          	&.nickname{
+			            	margin-left:10px;
+			            	width:150px;
+			            	i{
+			            		&.icon-nv{
+			            			color:#F771B7;
+			            			font-size:17px;
+			            		}
+			            		&.icon-82{
+			            			color:$bule;
+			            		}
+
+			            	}
+			          	}
+			        }
+			    }
 			}
 		}
 	}

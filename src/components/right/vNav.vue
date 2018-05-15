@@ -1,10 +1,12 @@
 <template>
   <div class="v-nav" >
-    <ul>
-      <li :class="{active:index === activeIndex}" @click="active(index)" v-for="(option,index) in options" :key="option.name">
-        <router-link :to="{name:'songlist',params:{id:'111111'}}" class="link" :class="{active:index === activeIndex}">{{option.name}}</router-link>
-      </li> 
-    </ul>
+   <div class="con">
+      <ul>
+        <li :class="{active:index === navAcive}" v-for="(option,index) in options" :key="option.name">
+          <router-link :to="{path:option.link}" class="link" :class="{active:index === navAcive}">{{option.name}}</router-link>
+        </li> 
+      </ul>
+   </div>
   </div>
 </template>
 <script>
@@ -16,19 +18,19 @@ export default {
       default: () => [
         {
           name: '个性推荐',
-          link: ''
+          link: '/'
         },
         {
           name: '歌单',
-          link: '/songlist'
+          link: '/songlists'
         },
         {
           name: '主播电台',
-          link: ''
+          link: '/dj'
         },
         {
           name: '排行榜',
-          link: ''
+          link: '/ranking'
         },
         {
           name: '歌手',
@@ -41,15 +43,28 @@ export default {
         ]
     }
   },
-  data () {
+  data(){
     return {
-      activeIndex:0
+      navAcive: 0,
+      navName: ['default', 'songlists', 'dj','ranking']
     }
   },
+  // computed:{
+  //   navIndex(){
+  //     return this.$store.state.navIndex
+  //   }
+  // },
+  created(){
+    this.navAcive = this.navName.indexOf(this.$route.name || 'default')
+  },
   methods: {
-    active(index){
-      console.log('test');
-      this.activeIndex = index
+    // active(index){
+    //   this.$store.commit('navAcive',index)
+    // },
+  },
+  watch:{
+    '$route'(val){
+      this.navAcive = this.navName.indexOf(val.name || 'default')
     }
   }
 }
@@ -58,10 +73,14 @@ export default {
 @import '../../style/global.scss';
 .v-nav{
   position:relative;
-  border-bottom:2px rgb(229,229,230) solid;  
-  width:100%;
-  height:60px;
-  text-align:center;
+  
+  .con{
+    border-bottom:1.5px rgb(229,229,230) solid;  
+    width:100%;
+    height:56.75px;
+    text-align:center;
+    // padding: 10px;
+  }
   ul{
     display:inline-block;
     overflow:auto;
@@ -70,8 +89,8 @@ export default {
       float:left;
       cursor:pointer;
       display:inline-block;
-      line-height:60px;
-      height:60px;
+      line-height:56px;
+      height:100%;
       font-size:20px;
       margin: 0 13px;
       min-width:80px;
@@ -85,6 +104,9 @@ export default {
         
       }
       .link{
+        display:inline-block;
+        height:100%;
+        width:100%;
         text-decoration: none;
         color:black;
         &:hover{

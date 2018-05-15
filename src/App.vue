@@ -1,22 +1,15 @@
 <template>
   <div id="app">
-    <!-- <banner :imgs="imgs"></banner> -->
-<!--     <img src="./assets/logo.png">
-    <router-view/> -->
-    <!-- <loader ></loader> -->
+    <about class="about"></about>
     <div id="top">
       <top></top>
     </div>
     <div id="middle">
-      <div class="left">
+      <div class="left" :class="{haspadding:playingSong.id}">
         <user-menu class="um"></user-menu>
-        <small-playing class="sp"></small-playing>
+        <small-playing class="sp" v-if="playingSong.id"></small-playing>
       </div>
-      <div class="right">
-        <!-- <v-nav></v-nav> -->
-            <!-- <banner :imgs="imgs"></banner> -->
-        <!-- <view></view> -->
-<!--         <default-right></default-right> -->
+      <div class="right" ref="right">
         <router-view></router-view>
       </div>
       <transition name="playing-inter" >
@@ -25,8 +18,7 @@
     </div>
     <div id="bottom">
       <player></player>
-    </div>
-    
+    </div> 
   </div>
 </template>
 
@@ -39,49 +31,61 @@ import userMenu from './components/left/userMenu'
 import smallPlaying from './components/left/smallPlaying'
 import playingInterface from './components/middle/playInterface/playInterface'
 
-//test
-import vNav from './components/right/vNav'
+import about from './components/about'
 
-import defaultRight from './components/right/defaultRight'
+//request
+import request from './request/request'
+
+import throttle from './utility/throttle'
+
 export default {
   name: 'App',
   data () {
     return {
       imgs: [],
+      isPlaying:false,
+      hasScroll: null
     }
   },
   components: {
     'banner': banner,
-    'top':top,
-    'player':player,
-    'user-menu':userMenu,
-    'play-interface':playingInterface,
-    'small-playing':smallPlaying,
-    'v-nav':vNav,
-    'default-right':defaultRight,
-    // 'loader':loader
+    'top': top,
+    'player': player,
+    'user-menu': userMenu,
+    'play-interface': playingInterface,
+    'small-playing': smallPlaying,
+    'about':about
   },
   computed:{
     maximize(){
       return this.$store.state.maximize
+    },
+    playingSong(){
+      return this.$store.state.playingSong
+    },
+    navIndex(){
+      return this.$store.state.navIndex
     }
   },
-  methods: {
-    getBanner () {
-      this.axios.get('http://musicapi.leanapp.cn/banner').then((response) => {
-        // console.log()
-        this.imgs = response.data.banners
-        console.log(JSON.stringify(response.data.banners));
-      })
-
-    }
-  },
-  created () {
-    this.getBanner();
-    this.$on('maximize',function () {
+  mounted (){
+    this.$on('maximize',() => {
       this.maximize = true
-      console.log('aaaaa')
     })
+    this.hasScroll = throttle(() => {
+      this.$store.commit('scroll',this.$refs.right.scrollTop)
+    },100)
+  },
+  methods:{
+  },
+  watch:{
+    navIndex(val){
+      let right = this.$refs.right
+      if(val === 2){
+        right.addEventListener('scroll', this.hasScroll)
+      }else{
+        right.removeEventListener('scroll', this.hasScroll)
+      }
+    }
   }
 }
 </script>
@@ -105,13 +109,18 @@ export default {
   padding:$topHeight 0 $playerHeight 0;
   overflow:hidden;
   min-width:$mainWidth;
+  .about{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+  }
 }
 #top{
   height:62px;
   position:absolute;
   top:0;
   width:100%;
-  z-index:1000;
+  z-index:10;
 }
 #player{
   position: absolute;
@@ -130,10 +139,16 @@ export default {
     position:absolute;
     left:0;
     width:$userMenuWidth;
-    padding-bottom:$smallPlayingHeight;
+    &.haspadding{
+      padding-bottom:$smallPlayingHeight;
+    }
+    
     .sp{
       position:absolute;
       bottom:0;
+    }
+    .um{
+      height:100%;
     }
   }
   .right{
@@ -147,6 +162,7 @@ export default {
     width:100%;
     position:relative;
     margin:0 auto; 
+    // padding:0 40px;
   }
 }
 .PI{

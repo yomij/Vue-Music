@@ -16,6 +16,7 @@ $border:rgb(229,229,230);
 $bule:rgb(64,158,209);
 
 
+
 // palyer
 $playerWidth:245px;
 $playerHeight:57px;
@@ -44,13 +45,34 @@ input{
     border:none;
 }
 
+.text-over{
+	overflow: hidden;
+	// white-space: nowrap;
+	text-overflow: ellipsis
+}
+
+.bluefont{
+	color:rgb(64,158,209);
+}
 .grayfont{
 	color:rgb(207,206,208);
 	margin:0 5px;
 }
+.gray{
+	color:rgb(157,156,158);
+}
+.lightgray{
+	background-color: $lightgray;
+}
+.noborder{
+	border:none !important;
+}
+.nopadding{
+	padding:0 !important;
+}
 a{
 	text-decoration: none;
-	
+	// color:#000;
 }
 
 

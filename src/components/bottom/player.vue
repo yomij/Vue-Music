@@ -82,10 +82,12 @@
 				<table cellspacing="0">
 					<tr class="songInf" v-for="(song,index) in listeningList" :class="{double:index%2,songPick:index===playingIndex}" @dblclick="listen(song,index)" @click="songPicked(index)" >
 						<td class="playSymbol"><i class="iconfont" :class="{'icon-bofang':playingIndex === index &&isPlaying,'icon-zanting':playingIndex === index && !isPlaying}"></i></td>
-						<td class="songName">{{song.name}}<span class="grayfont" v-if="song.alia[0]">({{song.alia[0]}})</span><span class="quality">sq</span></td>
-						<td class="singer">{{song.ar[0].name}}</td>
+						<td class="songName">
+							<p>{{song.name}}<span class="grayfont" v-if="song.alias[0]">({{song.alias[0]}})</span></p>
+							<span class="quality">SQ</span></td>
+						<td class="singer">{{song.artists[0].name}}</td>
 						<td class="source"><i class="iconfont icon-fabu"></i></td>
-						<td class="length">{{getSongDuration(song.dt/1000)}}</td>
+						<td class="length">{{getSongDuration(song.duration/1000)}}</td>
 					</tr>
 				</table>
 			</div>
@@ -96,6 +98,9 @@
 
 <script>
 import listenList from './listenList.vue'
+
+import throttle from '../../utility/throttle'
+import time from '../../utility/transTime'
 
 export default {
 	name: 'player',
@@ -126,12 +131,9 @@ export default {
 		// this.test()
 	},
 	mounted(){
-		this.audio.addEventListener("timeupdate", this.progressUpdate.bind(this))
+		this.audio.addEventListener("timeupdate", throttle(this.progressUpdate,500))
 		this.audio.volume = .1
 		this.progressWidth =  this.$refs.progress.offsetWidth
-		window.onresize = () =>{
-			this.progressWidth =  this.$refs.progress.offsetWidth
-		}
 	},
 	computed:{
 		isPlaying(){ 
@@ -170,6 +172,11 @@ export default {
 			var length = this.listeningList.length
 			var index = this.playingIndex
 			if(this.playMode != 3){
+				if(length === 1){
+					this.audio.currentTime = 0
+    				this.play()
+    				return
+				}
 				if(isPre){
     				if(index !== 0){
     					this.$store.commit('changePlayingIndex', index - 1)
@@ -184,6 +191,7 @@ export default {
     				}
     			}
 			}else{
+				//随机
 				var randomIndex = Math.floor(Math.random() * length)
     			while(randomIndex == this.playingIndex){
     				randomIndex = Math.floor(Math.random() * length)
@@ -197,12 +205,26 @@ export default {
 		progressUpdate(){
 			if(!this.isAdjing){
     			this.currentTime = this.getSongDuration(this.audio.currentTime)
-    			this.progress = (this.audio.currentTime / this.audio.duration ) * this.progressWidth //进度
+    			this.progress = (this.audio.currentTime / this.audio.duration ) * this.$refs.progress.offsetWidth //进度
     		}
     		if(this.audio.currentTime >= this.audio.duration){
-    			var length = this.listeningList.length
-				var index = this.playingIndex
-    			switch(this.playMode) {
+    			let length = this.listeningList.length,
+					index = this.playingIndex,
+					mode = this.playMode
+
+				if(length === index + 1){
+					if(mode === 0){
+						this.audio.currentTime = 0
+	    				this.pause()
+	    				return
+					}else{
+						this.audio.currentTime = 0
+						this.play()
+						return
+					}
+					
+				}
+    			switch(mode) {
     				case 0: //顺序播放
     					if(length - 1 !== index){
     						this.$store.commit('changePlayingIndex', index + 1)
@@ -218,6 +240,7 @@ export default {
     				case 2://单曲循环    				
     					this.audio.currentTime = 0
     					this.play()
+    					// this.$store.commit('changePlayingIndex', this.playingIndex)
     					break
     				case 3://随机播放 
     					var randomIndex = Math.floor(Math.random() * length)
@@ -229,19 +252,13 @@ export default {
     			}
     		}
 		},
-		trans(time){
-			if(time<10){
-    			return `0${Math.floor(time)}`
-    		}else if(time<60){
-    			return `${Math.floor(time)}`
-    		}
-		},
-		getSongDuration(time){
-			return `${this.trans(time / 60)}:${this.trans(time % 60)}`
+		getSongDuration(t){
+			return time.transDuration(t * 1000)
 		},
 		adjTimeByClick(el){
 			this.progress=el.layerX
 			this.audio.currentTime= (el.layerX / this.progressWidth) * this.audio.duration
+			this.play()
 		},
 		adjTimeBegin(){
 			console.log('test')
@@ -253,8 +270,8 @@ export default {
 				this.audio.currentTime= (this.progress /  this.progressWidth) * this.audio.duration
 				this.readyToMove = false
 			}
-
 			this.isAdjing = false
+			this.play()
 			
 		},
 		adjTimeByMove(el){
@@ -262,7 +279,8 @@ export default {
 			if(this.readyToMove && el.clientX > left){
 				this.progress = el.clientX - left
 			}
-			el.cancelBubble = true;
+			el.cancelBubble = true
+
 		},
 		soundSliderShow(){
 			this.isSoundSliderShow = true
@@ -310,31 +328,7 @@ export default {
 				this.isPlayList = false
 			}
 		},
-		// test(){
-		// 	this.axios.get('http://musicapi.leanapp.cn/playlist/detail?id=24381625').then(res=>{
-		// 		// console.log(res.data.playlist.tracks);
-		// 		res.data.playlist.tracks.map( item => {
-		// 			// console.log(item);
-		// 			this.axios.get(`http://musicapi.leanapp.cn/music/url?id=${item.id}`).then(res=>{
-
-		// 				item.url = res.data.data[0].url
-		// 				console.log(item.url)
-		// 				var au = new Audio(item.url)
-		// 				au.addEventListener('canplay', ()=>{
-		// 					item.songLength = this.getSongDuration(au.duration)
-		// 					this.songList.push(item)
-		// 					console.log(item.name);
-		// 				})
-		// 			})
-		// 		})
-		// 	})
-		// },
 		listen(song, index){
-			// console.log(song.url)
-			// this.audio.src = song.url
-			// this.play()
-			// this.duration = song.songLength
-			// this.playingIndex = index
 			this.$store.commit('changePlayingIndex',index)
 			if(song == this.playingSong) return
 			else{
@@ -347,21 +341,21 @@ export default {
 		},
 		songPicked(index){
 			this.pickedSong = index
+		},
+		songPlay(){
+			console.log('歌曲开始播放');
+			this.audio.play()
+			this.$store.commit('play')
 		}
 	},
 	watch:{
 		playingSong(val){
+			this.audio.removeEventListener('durationchange',this.songPlay)
 			console.log('歌曲准备播放');
-			// console.log(JSON.stringify(val));
-			this.duration = this.getSongDuration(val.dt/1000)
+			this.duration = this.getSongDuration(val.duration/1000)
 			this.audio.src = `http://music.163.com/song/media/outer/url?id=${val.id}.mp3`
 			console.log(this.audio.src);
-			this.audio.addEventListener('durationchange', ()=>{
-				console.log('歌曲开始播放');
-				this.audio.play()
-				this.$store.commit('play')
-			})
-			
+			this.audio.addEventListener('durationchange', this.songPlay)			
 		}
 	}
 }

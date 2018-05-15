@@ -1,315 +1,361 @@
-；
-{
-	"albums": [{
-		"id": 36179829,
-		"name": "<span style='color:#2EB7EB'>追光者</span>",
-		"artist": {
-			"id": 981141,
-			"name": "伦桑",
-			"picUrl": "http://p1.music.126.net/0m1NXhFB1zKGLIY4Ie1DrQ==/109951162849124358.jpg",
-			"alias": [],
-			"albumSize": 55,
-			"picId": 109951162849124350,
-			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-			"img1v1": 0,
-			"trans": null
-		},
-		"publishTime": 1505238557105,
-		"size": 1,
-		"copyrightId": 0,
-		"status": 0,
-		"picId": 109951163024132340
-	}, {
-		"id": 35644242,
-		"name": "夏至未至 影视原声带",
-		"artist": {
-			"id": 122455,
-			"name": "群星",
-			"picUrl": "http://p1.music.126.net/HnrjpF8WyWqxgsvOEqPaWw==/3261151501061433.jpg",
-			"alias": ["华语群星"],
-			"albumSize": 7978,
-			"picId": 3261151501061433,
-			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-			"img1v1": 0,
-			"alia": ["华语群星"],
-			"trans": null
-		},
-		"publishTime": 1497801600007,
-		"size": 8,
-		"copyrightId": 414012,
-		"status": 0,
-		"picId": 19149094509535910
-	}],
-	"artists": [{
-		"id": 7409,
-		"name": "岑宁儿",
-		"picUrl": "http://p1.music.126.net/fGym56sjoSHva1ynd7f6vg==/109951163137927948.jpg",
-		"alias": ["Yoyo Sham"],
-		"albumSize": 14,
-		"picId": 109951163137927950,
-		"img1v1Url": "http://p1.music.126.net/frpkmg-7V2BPwHShLlXCbA==/109951163137936035.jpg",
-		"accountId": 53786921,
-		"img1v1": 109951163137936030,
-		"alia": ["Yoyo Sham"],
-		"trans": null
-	}],
-	"songs": [{
-		"id": 483671599,
-		"name": "<span style='color:#2EB7EB'>追光者</span>",
-		"artists": [{
-			"id": 7409,
-			"name": "岑宁儿",
-			"picUrl": null,
-			"alias": [],
-			"albumSize": 0,
-			"picId": 0,
-			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-			"img1v1": 0,
-			"trans": null
-		}],
-		"album": {
-			"id": 35644242,
-			"name": "夏至未至 影视原声带",
-			"artist": {
-				"id": 0,
-				"name": "",
-				"picUrl": null,
-				"alias": [],
-				"albumSize": 0,
-				"picId": 0,
-				"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-				"img1v1": 0,
-				"trans": null
-			},
-			"publishTime": 1497801600007,
-			"size": 8,
-			"copyrightId": 414012,
-			"status": 0,
-			"picId": 19149094509535910
-		},
-		"duration": 235833,
-		"copyrightId": 414012,
-		"status": 0,
-		"alias": ["电视剧《夏至未至》插曲"],
-		"rtype": 0,
-		"ftype": 0,
-		"mvid": 5563801,
-		"fee": 0,
-		"rUrl": null
-	}, {
-		"id": 517728046,
-		"name": "<span style='color:#2EB7EB'>追光者</span>Remix",
-		"artists": [{
-			"id": 12798217,
-			"name": "switch godLe$",
-			"picUrl": null,
-			"alias": [],
-			"albumSize": 0,
-			"picId": 0,
-			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-			"img1v1": 0,
-			"trans": null
-		}],
-		"album": {
-			"id": 36731653,
-			"name": "Cover $hit",
-			"artist": {
-				"id": 0,
-				"name": "",
-				"picUrl": null,
-				"alias": [],
-				"albumSize": 0,
-				"picId": 0,
-				"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-				"img1v1": 0,
-				"trans": null
-			},
-			"publishTime": 1509943187600,
-			"size": 3,
-			"copyrightId": 0,
-			"status": 0,
-			"picId": 109951163057146130
-		},
-		"duration": 239641,
-		"copyrightId": 0,
-		"status": 0,
-		"alias": [],
-		"rtype": 0,
-		"ftype": 0,
-		"mvid": 0,
-		"fee": 0,
-		"rUrl": null
-	}, {
-		"id": 505771816,
-		"name": "<span style='color:#2EB7EB'>追光者</span>（Cover 岑宁儿）",
-		"artists": [{
-			"id": 981141,
-			"name": "伦桑",
-			"picUrl": null,
-			"alias": [],
-			"albumSize": 0,
-			"picId": 0,
-			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-			"img1v1": 0,
-			"trans": null
-		}],
-		"album": {
-			"id": 36179829,
-			"name": "<span style='color:#2EB7EB'>追光者</span>",
-			"artist": {
-				"id": 0,
-				"name": "",
-				"picUrl": null,
-				"alias": [],
-				"albumSize": 0,
-				"picId": 0,
-				"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-				"img1v1": 0,
-				"trans": null
-			},
-			"publishTime": 1505238557105,
-			"size": 1,
-			"copyrightId": 0,
-			"status": 0,
-			"picId": 109951163024132340
-		},
-		"duration": 235709,
-		"copyrightId": 0,
-		"status": 0,
-		"alias": [],
-		"rtype": 0,
-		"ftype": 0,
-		"mvid": 0,
-		"fee": 0,
-		"rUrl": null
-	}, {
-		"id": 525442923,
-		"name": "<span style='color:#2EB7EB'>追光者</span>Remix",
-		"artists": [{
-			"id": 12227235,
-			"name": "ivan蛋挞",
-			"picUrl": null,
-			"alias": [],
-			"albumSize": 0,
-			"picId": 0,
-			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-			"img1v1": 0,
-			"trans": null
-		}, {
-			"id": 12452563,
-			"name": "D.Harry",
-			"picUrl": null,
-			"alias": [],
-			"albumSize": 0,
-			"picId": 0,
-			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-			"img1v1": 0,
-			"trans": null
-		}, {
-			"id": 0,
-			"name": "RVINSTVP",
-			"picUrl": null,
-			"alias": [],
-			"albumSize": 0,
-			"picId": 0,
-			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-			"img1v1": 0,
-			"trans": null
-		}],
-		"album": {
-			"id": 37016597,
-			"name": "<span style='color:#2EB7EB'>追光者</span>Remix",
-			"artist": {
-				"id": 0,
-				"name": "",
-				"picUrl": null,
-				"alias": [],
-				"albumSize": 0,
-				"picId": 0,
-				"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-				"img1v1": 0,
-				"trans": null
-			},
-			"publishTime": 1513858110210,
-			"size": 1,
-			"copyrightId": 0,
-			"status": 0,
-			"picId": 109951163089638510
-		},
-		"duration": 267996,
-		"copyrightId": 0,
-		"status": 0,
-		"alias": [],
-		"rtype": 0,
-		"ftype": 0,
-		"mvid": 0,
-		"fee": 0,
-		"rUrl": null
-	}],
-	"playlists": [{
-		"id": 75421929,
-		"name": "评论过万的中文歌与潜力股",
-		"coverImgUrl": "http://p1.music.126.net/THGppBt3_BLxnm9tGQTK5Q==/7884597883694834.jpg",
-		"creator": null,
-		"subscribed": false,
-		"trackCount": 207,
-		"userId": 39468344,
-		"playCount": 25400682,
-		"bookCount": 436180,
-		"highQuality": true
-	}, {
-		"id": 952446466,
-		"name": "安河桥上没有<span style='color:#2EB7EB'>追光者</span>，童话镇里没有温柔乡。",
-		"coverImgUrl": "http://p1.music.126.net/nJcf8Mj8qoluct_KjuJkbg==/3445869446819923.jpg",
-		"creator": null,
-		"subscribed": false,
-		"trackCount": 110,
-		"userId": 296443780,
-		"playCount": 13909,
-		"bookCount": 283,
-		"highQuality": false
-	}],
-	"mvs": [{
-		"id": 5563801,
-		"cover": "http://p3.music.126.net/5JFlnZbDpBR70BsYJIhLrg==/18535567022997577.jpg",
-		"name": "<span style='color:#2EB7EB'>追光者</span>",
-		"playCount": 13375619,
-		"briefDesc": "纪念你我已经逝去的青春",
-		"desc": null,
-		"artistName": "岑宁儿",
-		"artistId": 7409,
-		"duration": 232000,
-		"mark": 0,
-		"subed": false,
-		"artists": [{
-			"id": 7409,
-			"name": "岑宁儿",
-			"alias": ["Yoyo Sham", "岑宝儿"],
-			"transNames": null
-		}]
-	}, {
-		"id": 5711022,
-		"cover": "http://p4.music.126.net/xRPWnpRh9qB0EFri0t55UQ==/109951163057071674.jpg",
-		"name": "<span style='color:#2EB7EB'>追光者</span>（Cover 岑宁儿）",
-		"playCount": 11849,
-		"briefDesc": "",
-		"desc": null,
-		"artistName": "邓文怡",
-		"artistId": 12251309,
-		"duration": 234000,
-		"mark": 0,
-		"subed": false,
-		"artists": [{
-			"id": 12251309,
-			"name": "邓文怡",
-			"alias": [],
-			"transNames": null
-		}, {
-			"id": 12311533,
-			"name": "邓力玮",
-			"alias": [],
-			"transNames": null
-		}]
-	}],
-	"order": ["songs", "albums", "mvs", "artists", "playlists"]
-}
+ {
+ 	"id": 187374,
+ 	"name": "我",
+ 	"artists": [{
+ 		"id": 6457,
+ 		"name": "张国荣",
+ 		"picUrl": null,
+ 		"alias": [],
+ 		"albumSize": 0,
+ 		"picId": 0,
+ 		"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+ 		"img1v1": 0,
+ 		"trans": null
+ 	}],
+ 	"album": {
+ 		"id": 19003,
+ 		"name": "大热",
+ 		"artist": {
+ 			"id": 0,
+ 			"name": "",
+ 			"picUrl": null,
+ 			"alias": [],
+ 			"albumSize": 0,
+ 			"picId": 0,
+ 			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+ 			"img1v1": 0,
+ 			"trans": null
+ 		},
+ 		"publishTime": 962380800000,
+ 		"size": 12,
+ 		"copyrightId": 5003,
+ 		"status": 1,
+ 		"picId": 98956046505532
+ 	},
+ 	"duration": 224444,
+ 	"copyrightId": 7003,
+ 	"status": 0,
+ 	"alias": [],
+ 	"rtype": 0,
+ 	"ftype": 0,
+ 	"mvid": 0,
+ 	"fee": 8,
+ 	"rUrl": null
+ }
+
+
+
+ {
+ 	"albums": [{
+ 		"id": 36179829,
+ 		"name": "<span style='color:#2EB7EB'>追光者</span>",
+ 		"artist": {
+ 			"id": 981141,
+ 			"name": "伦桑",
+ 			"picUrl": "http://p1.music.126.net/0m1NXhFB1zKGLIY4Ie1DrQ==/109951162849124358.jpg",
+ 			"alias": [],
+ 			"albumSize": 55,
+ 			"picId": 109951162849124350,
+ 			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+ 			"img1v1": 0,
+ 			"trans": null
+ 		},
+ 		"publishTime": 1505238557105,
+ 		"size": 1,
+ 		"copyrightId": 0,
+ 		"status": 0,
+ 		"picId": 109951163024132340
+ 	}, {
+ 		"id": 35644242,
+ 		"name": "夏至未至 影视原声带",
+ 		"artist": {
+ 			"id": 122455,
+ 			"name": "群星",
+ 			"picUrl": "http://p1.music.126.net/HnrjpF8WyWqxgsvOEqPaWw==/3261151501061433.jpg",
+ 			"alias": ["华语群星"],
+ 			"albumSize": 7978,
+ 			"picId": 3261151501061433,
+ 			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+ 			"img1v1": 0,
+ 			"alia": ["华语群星"],
+ 			"trans": null
+ 		},
+ 		"publishTime": 1497801600007,
+ 		"size": 8,
+ 		"copyrightId": 414012,
+ 		"status": 0,
+ 		"picId": 19149094509535910
+ 	}],
+ 	"artists": [{
+ 		"id": 7409,
+ 		"name": "岑宁儿",
+ 		"picUrl": "http://p1.music.126.net/fGym56sjoSHva1ynd7f6vg==/109951163137927948.jpg",
+ 		"alias": ["Yoyo Sham"],
+ 		"albumSize": 14,
+ 		"picId": 109951163137927950,
+ 		"img1v1Url": "http://p1.music.126.net/frpkmg-7V2BPwHShLlXCbA==/109951163137936035.jpg",
+ 		"accountId": 53786921,
+ 		"img1v1": 109951163137936030,
+ 		"alia": ["Yoyo Sham"],
+ 		"trans": null
+ 	}],
+ 	"songs": [{
+ 		"id": 483671599,
+ 		"name": "<span style='color:#2EB7EB'>追光者</span>",
+ 		"artists": [{
+ 			"id": 7409,
+ 			"name": "岑宁儿",
+ 			"picUrl": null,
+ 			"alias": [],
+ 			"albumSize": 0,
+ 			"picId": 0,
+ 			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+ 			"img1v1": 0,
+ 			"trans": null
+ 		}],
+ 		"album": {
+ 			"id": 35644242,
+ 			"name": "夏至未至 影视原声带",
+ 			"artist": {
+ 				"id": 0,
+ 				"name": "",
+ 				"picUrl": null,
+ 				"alias": [],
+ 				"albumSize": 0,
+ 				"picId": 0,
+ 				"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+ 				"img1v1": 0,
+ 				"trans": null
+ 			},
+ 			"publishTime": 1497801600007,
+ 			"size": 8,
+ 			"copyrightId": 414012,
+ 			"status": 0,
+ 			"picId": 19149094509535910
+ 		},
+ 		"duration": 235833,
+ 		"copyrightId": 414012,
+ 		"status": 0,
+ 		"alias": ["电视剧《夏至未至》插曲"],
+ 		"rtype": 0,
+ 		"ftype": 0,
+ 		"mvid": 5563801,
+ 		"fee": 0,
+ 		"rUrl": null
+ 	}, {
+ 		"id": 517728046,
+ 		"name": "<span style='color:#2EB7EB'>追光者</span>Remix",
+ 		"artists": [{
+ 			"id": 12798217,
+ 			"name": "switch godLe$",
+ 			"picUrl": null,
+ 			"alias": [],
+ 			"albumSize": 0,
+ 			"picId": 0,
+ 			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+ 			"img1v1": 0,
+ 			"trans": null
+ 		}],
+ 		"album": {
+ 			"id": 36731653,
+ 			"name": "Cover $hit",
+ 			"artist": {
+ 				"id": 0,
+ 				"name": "",
+ 				"picUrl": null,
+ 				"alias": [],
+ 				"albumSize": 0,
+ 				"picId": 0,
+ 				"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+ 				"img1v1": 0,
+ 				"trans": null
+ 			},
+ 			"publishTime": 1509943187600,
+ 			"size": 3,
+ 			"copyrightId": 0,
+ 			"status": 0,
+ 			"picId": 109951163057146130
+ 		},
+ 		"duration": 239641,
+ 		"copyrightId": 0,
+ 		"status": 0,
+ 		"alias": [],
+ 		"rtype": 0,
+ 		"ftype": 0,
+ 		"mvid": 0,
+ 		"fee": 0,
+ 		"rUrl": null
+ 	}, {
+ 		"id": 505771816,
+ 		"name": "<span style='color:#2EB7EB'>追光者</span>（Cover 岑宁儿）",
+ 		"artists": [{
+ 			"id": 981141,
+ 			"name": "伦桑",
+ 			"picUrl": null,
+ 			"alias": [],
+ 			"albumSize": 0,
+ 			"picId": 0,
+ 			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+ 			"img1v1": 0,
+ 			"trans": null
+ 		}],
+ 		"album": {
+ 			"id": 36179829,
+ 			"name": "<span style='color:#2EB7EB'>追光者</span>",
+ 			"artist": {
+ 				"id": 0,
+ 				"name": "",
+ 				"picUrl": null,
+ 				"alias": [],
+ 				"albumSize": 0,
+ 				"picId": 0,
+ 				"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+ 				"img1v1": 0,
+ 				"trans": null
+ 			},
+ 			"publishTime": 1505238557105,
+ 			"size": 1,
+ 			"copyrightId": 0,
+ 			"status": 0,
+ 			"picId": 109951163024132340
+ 		},
+ 		"duration": 235709,
+ 		"copyrightId": 0,
+ 		"status": 0,
+ 		"alias": [],
+ 		"rtype": 0,
+ 		"ftype": 0,
+ 		"mvid": 0,
+ 		"fee": 0,
+ 		"rUrl": null
+ 	}, {
+ 		"id": 525442923,
+ 		"name": "<span style='color:#2EB7EB'>追光者</span>Remix",
+ 		"artists": [{
+ 			"id": 12227235,
+ 			"name": "ivan蛋挞",
+ 			"picUrl": null,
+ 			"alias": [],
+ 			"albumSize": 0,
+ 			"picId": 0,
+ 			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+ 			"img1v1": 0,
+ 			"trans": null
+ 		}, {
+ 			"id": 12452563,
+ 			"name": "D.Harry",
+ 			"picUrl": null,
+ 			"alias": [],
+ 			"albumSize": 0,
+ 			"picId": 0,
+ 			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+ 			"img1v1": 0,
+ 			"trans": null
+ 		}, {
+ 			"id": 0,
+ 			"name": "RVINSTVP",
+ 			"picUrl": null,
+ 			"alias": [],
+ 			"albumSize": 0,
+ 			"picId": 0,
+ 			"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+ 			"img1v1": 0,
+ 			"trans": null
+ 		}],
+ 		"album": {
+ 			"id": 37016597,
+ 			"name": "<span style='color:#2EB7EB'>追光者</span>Remix",
+ 			"artist": {
+ 				"id": 0,
+ 				"name": "",
+ 				"picUrl": null,
+ 				"alias": [],
+ 				"albumSize": 0,
+ 				"picId": 0,
+ 				"img1v1Url": "http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+ 				"img1v1": 0,
+ 				"trans": null
+ 			},
+ 			"publishTime": 1513858110210,
+ 			"size": 1,
+ 			"copyrightId": 0,
+ 			"status": 0,
+ 			"picId": 109951163089638510
+ 		},
+ 		"duration": 267996,
+ 		"copyrightId": 0,
+ 		"status": 0,
+ 		"alias": [],
+ 		"rtype": 0,
+ 		"ftype": 0,
+ 		"mvid": 0,
+ 		"fee": 0,
+ 		"rUrl": null
+ 	}],
+ 	"playlists": [{
+ 		"id": 75421929,
+ 		"name": "评论过万的中文歌与潜力股",
+ 		"coverImgUrl": "http://p1.music.126.net/THGppBt3_BLxnm9tGQTK5Q==/7884597883694834.jpg",
+ 		"creator": null,
+ 		"subscribed": false,
+ 		"trackCount": 207,
+ 		"userId": 39468344,
+ 		"playCount": 25400682,
+ 		"bookCount": 436180,
+ 		"highQuality": true
+ 	}, {
+ 		"id": 952446466,
+ 		"name": "安河桥上没有<span style='color:#2EB7EB'>追光者</span>，童话镇里没有温柔乡。",
+ 		"coverImgUrl": "http://p1.music.126.net/nJcf8Mj8qoluct_KjuJkbg==/3445869446819923.jpg",
+ 		"creator": null,
+ 		"subscribed": false,
+ 		"trackCount": 110,
+ 		"userId": 296443780,
+ 		"playCount": 13909,
+ 		"bookCount": 283,
+ 		"highQuality": false
+ 	}],
+ 	"mvs": [{
+ 		"id": 5563801,
+ 		"cover": "http://p3.music.126.net/5JFlnZbDpBR70BsYJIhLrg==/18535567022997577.jpg",
+ 		"name": "<span style='color:#2EB7EB'>追光者</span>",
+ 		"playCount": 13375619,
+ 		"briefDesc": "纪念你我已经逝去的青春",
+ 		"desc": null,
+ 		"artistName": "岑宁儿",
+ 		"artistId": 7409,
+ 		"duration": 232000,
+ 		"mark": 0,
+ 		"subed": false,
+ 		"artists": [{
+ 			"id": 7409,
+ 			"name": "岑宁儿",
+ 			"alias": ["Yoyo Sham", "岑宝儿"],
+ 			"transNames": null
+ 		}]
+ 	}, {
+ 		"id": 5711022,
+ 		"cover": "http://p4.music.126.net/xRPWnpRh9qB0EFri0t55UQ==/109951163057071674.jpg",
+ 		"name": "<span style='color:#2EB7EB'>追光者</span>（Cover 岑宁儿）",
+ 		"playCount": 11849,
+ 		"briefDesc": "",
+ 		"desc": null,
+ 		"artistName": "邓文怡",
+ 		"artistId": 12251309,
+ 		"duration": 234000,
+ 		"mark": 0,
+ 		"subed": false,
+ 		"artists": [{
+ 			"id": 12251309,
+ 			"name": "邓文怡",
+ 			"alias": [],
+ 			"transNames": null
+ 		}, {
+ 			"id": 12311533,
+ 			"name": "邓力玮",
+ 			"alias": [],
+ 			"transNames": null
+ 		}]
+ 	}],
+ 	"order": ["songs", "albums", "mvs", "artists", "playlists"]
+ }

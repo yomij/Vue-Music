@@ -1,23 +1,23 @@
 <template>
-  <div class="songlist-inf" >
+  <div class="songlist-inf" v-if="songlistInf">
     
     <div class="header">
-      <img :src="songlistInf.playlist.coverImgUrl" >
+      <img :src="songlistInf.coverImgUrl" >
       <div class="inf">
         <p class="title">
-          <i class="icon">歌单</i><span class="name">{{songlistInf.playlist.name}}</span>
+          <i class="icon">歌单</i><span class="name">{{songlistInf.name}}</span>
           <span class="extra">
-            <i class="iconfont icon-yinle"></i><span>{{songlistInf.playlist.trackCount}}</span>
-            <i class="iconfont icon-bofang1"></i><span>{{songlistInf.playlist.playCount}}</span>
+            <i class="iconfont icon-yinle"></i><span>{{songlistInf.songsCount}}</span>
+            <i class="iconfont icon-bofang1"></i><span>{{playCount}}</span>
           </span>
         </p>
         <p class="creatInf">
-          <img :src="songlistInf.playlist.creator.avatarUrl">
-          <span>{{songlistInf.playlist.creator.nickname}}</span>
-          <span class="create-time">{{createTime(songlistInf.playlist.createTime)}}</span>
+          <img :src="songlistInf.creator.avatarUrl">
+          <span class="nickname">{{songlistInf.creator.nickname}}</span>
+          <span class="create-time">{{createTime}}</span>
         </p>
         <ul class="operate">
-          <li class="btn play">
+          <li class="btn play" @click="playAll">
               <i class="iconfont icon-bofang1"></i>播放全部
           </li>
           <li class="btn add">
@@ -33,75 +33,277 @@
             <i class="iconfont icon-tubiaozhizuomoban"></i>  下载全部
           </li> 
         </ul>
-        <p class="tags">
+        <p class="tags" v-if="songlistInf.tags[0]">
           <span class="tip">标签:</span><span v-html="tags"></span>
         </p>
-        <p class="des" :class="{nodes:!songlistInf.playlist.description}">
-          <span class="tip">简介:</span>{{songlistInf.playlist.description ? songlistInf.playlist.description : '添加简介'}}
+        <p class="des" :class="{nodes:!songlistInf.description}" v-if="songlistInf.description" ref="desContainer">
+          <span class="tip">简介:</span>
+          <span v-html="descript" class="descript" ref="descript">
+            <!-- {{songlistInf.description ? songlistInf.description : '添加简介'}} -->
+          </span>
         </p>
+        <i class="iconfont expand" :class="{'icon-jiantou_down':expandDes === 1,'icon-jiantou_up':expandDes === 2}" @click="showDes"></i>
       </div>
     </div>
     
     <div class="main">
       <ul class="nav">
-        <li class="active normal">歌曲列表</li>
-        <li class="normal">评论(12455)</li>
-        <li class="normal">收藏者</li>
+        <li class="normal" 
+        :class="{active:0 === activeIndex}"
+        @click="nav(0)">
+          歌曲列表
+        </li>
+        <li class="normal" :class="{active:1 === activeIndex}"
+        @click="nav(1)">
+          评论({{songlistInf.commentCount}})
+        </li>
+        <li class="normal"
+        :class="{active:2 === activeIndex}"
+        @click="nav(2)">
+          收藏者
+        </li>
         <li class="search"><input type="text" name="" value="" placeholder="搜索歌单音乐"><i class="iconfont icon-search"></i></li>
       </ul>
-      <ul class="filter">
-        <li></li>
-        <li>操作</li>
-        <li>音乐标题</li>
-        <li>歌手</li>
-        <li>专辑</li>
-        <li>时长</li>
-      </ul>
-      <div class="song">
-        <div class="song-index"></div>
-        <div class="song-op"></div>
-        <div class="song-title"></div>
-        <div class="singer"></div>
-        <div class="album"></div>
-        <div class="duration"></div>
+
+      
+      <div class="songs" v-show="0 === activeIndex">
+        <div class="filter">
+          <div class="left">
+            <div class="list index "></div>
+            <div class=" list op">操作</div>
+          </div>
+          <div class="right">
+            <div class="list title">音乐标题</div>
+            <div class="list singer">歌手</div>
+            <div class="list album">专辑</div>
+            <div class="list duration">时间</div>
+          </div>
+        </div>
+
+        <div class="song" v-for="(song, index) in songlistInf.songs" :class="{single: index & 1}" @dblclick="listen(song)">
+          <div class="left">
+            <div class="list index gray">{{index > 8 ? index + 1 : '0' + (index + 1)}}</div>
+            <div class="list op gray">
+              <i class="iconfont icon-cpxihuanxiantiao"></i>
+              <i class="iconfont icon-xiazai"></i>
+            </div>
+          </div>
+          <div class="right">
+            <div class="list title">{{song.name}}<span v-if="song.alias[0]" class="grayfont">({{song.alias[0]}})</span></div>
+            <div class="list singer">{{singers(song.artists)}}</div>
+            <div class="list album">{{song.album.name}}</div>
+            <div class="list duration">{{getSongDuration(song.duration / 1000)}}</div>
+          </div>
+        </div>
       </div>
+      
+      <div class="comments" v-if="1 === activeIndex">
+
+        <div class="write-comment">
+          <div class="write-bg">
+            <div class="write">
+              <i class="iconfont icon-iconset0137"></i>发表评论
+              <i class="iconfont icon-aite right"></i>
+              <i class="iconfont icon-smiling right"></i>
+            </div>
+          </div>
+        </div>
+        
+        <div class="brilliants" v-if="hotComments.length">         
+          <div class="tag">
+            精彩评论
+          </div>
+          <loader  :bgc="'#6A6969'" v-show="!dataReady"></loader>
+          <single-comment  v-if="dataReady" v-for="hotComment in hotComments" :comment="hotComment"></single-comment>
+        </div>
+
+        <div class="lately-comments">
+          <div class="tag">
+            最新评论({{songlistInf.commentCount}})
+          </div>
+          <loader  :bgc="'#6A6969'" v-show="!dataReady"></loader>
+          <single-comment  v-if="dataReady" v-for="comment in latelyComments" :comment="comment"></single-comment>
+        </div>
+        <page :total="total" @pageChange="updateComment"></page>
+      </div>
+
     </div>
   </div>
 </template>
 
 <script>
+import singleComment from '../singleComment'
+import loader from '../loader'
+import page from '../page'
+
+import request from '../../request/request'
 export default {
   name: 'songlistInf',
+  components:{
+    'single-comment': singleComment,
+    'loader': loader,
+    'page': page
+  },
   data(){
     return {
-      songlistInf:{"playlist":{"subscribers":[],"subscribed":false,"creator":{"defaultAvatar":false,"province":330000,"authStatus":0,"followed":false,"avatarUrl":"http://p1.music.126.net/A4Y9iDoDc6WNzGu_0Y8q-g==/19098516974745121.jpg","accountStatus":0,"gender":0,"city":330100,"birthday":862329600000,"userId":308176676,"userType":0,"nickname":"瑾酩丶","signature":"听得每首歌的女主角都是你啊。","description":"","detailDescription":"","avatarImgId":19098516974745121,"backgroundImgId":18928092672496010,"backgroundUrl":"http://p1.music.126.net/M14Y4h6LOQ8Lwnk9_7KZjw==/18928092672496010.jpg","authority":0,"mutual":false,"expertTags":null,"experts":null,"djStatus":0,"vipType":10,"remarkName":null,"backgroundImgIdStr":"18928092672496010","avatarImgIdStr":"19098516974745121","avatarImgId_str":"19098516974745121"},"tracks":[{"name":"僕が死のうと思ったのは","id":467011317,"pst":0,"t":0,"ar":[{"id":160729,"name":"中島美嘉","tns":[],"alias":[]}],"alia":[],"pop":100.0,"st":0,"rt":null,"fee":8,"v":8,"crbt":null,"cf":"","al":{"id":35242002,"name":"TOUGH","picUrl":"http://p1.music.126.net/Rv7XgyTNKwJNS-PAtXvRag==/18247494975126406.jpg","tns":["为爱勇敢"],"pic_str":"18247494975126406","pic":18247494975126406},"dt":381921,"h":{"br":320000,"fid":0,"size":15277497,"vd":-1.91},"m":{"br":160000,"fid":0,"size":7638771,"vd":-1.49},"l":{"br":96000,"fid":0,"size":4583280,"vd":-1.5},"a":null,"cd":"1","no":6,"rtUrl":null,"ftype":0,"rtUrls":[],"djId":0,"copyright":0,"s_id":0,"rtype":0,"rurl":null,"mst":9,"cp":7001,"mv":0,"publishTime":1490112000007,"tns":["曾经我也想过一了百了"]},{"name":"君だったら","id":26116370,"pst":0,"t":0,"ar":[{"id":19881,"name":"HAPPY BIRTHDAY","tns":[],"alias":[]}],"alia":[],"pop":100.0,"st":0,"rt":"","fee":0,"v":5,"crbt":null,"cf":"","al":{"id":2389679,"name":"今夜きみが怖い夢を見ませんように","picUrl":"http://p1.music.126.net/PfLFdJg2wKihsac60C-lYA==/2512384069491818.jpg","tns":[],"pic":2512384069491818},"dt":320000,"h":{"br":320000,"fid":0,"size":12848812,"vd":-3.17},"m":{"br":160000,"fid":0,"size":6438363,"vd":-2.76},"l":{"br":96000,"fid":0,"size":3873766,"vd":-2.81},"a":null,"cd":"1","no":4,"rtUrl":null,"ftype":0,"rtUrls":[],"djId":0,"copyright":2,"s_id":0,"rtype":0,"rurl":null,"mst":9,"cp":663018,"mv":0,"publishTime":1363104000007},{"name":"夕日","id":700032,"pst":0,"t":0,"ar":[{"id":17601,"name":"茶太","tns":[],"alias":[]}],"alia":[],"pop":100.0,"st":0,"rt":"","fee":0,"v":144,"crbt":null,"cf":"","al":{"id":68077,"name":"音楽ピューパとやさしい世界","picUrl":"http://p1.music.126.net/DdEbZlAK7dDUzkDRraDOgQ==/659706976677930.jpg","tns":[],"pic":659706976677930},"dt":192133,"h":{"br":320000,"fid":0,"size":7688403,"vd":2.0},"m":{"br":192000,"fid":0,"size":4613059,"vd":2.0},"l":{"br":128000,"fid":0,"size":3075387,"vd":2.0},"a":null,"cd":"1","no":12,"rtUrl":null,"ftype":0,"rtUrls":[],"djId":0,"copyright":2,"s_id":0,"rtype":0,"rurl":null,"mst":9,"cp":663018,"mv":0,"publishTime":1304179200000},{"name":"キラメキ-公生とかをりの演奏ver.-","id":29769437,"pst":0,"t":0,"ar":[{"id":22367,"name":"wacci","tns":[],"alias":[]}],"alia":[],"pop":95.0,"st":0,"rt":null,"fee":0,"v":13,"crbt":null,"cf":"","al":{"id":3076076,"name":"キラメキ(期間生産限定盤)","picUrl":"http://p1.music.126.net/kQqkFAqZwOLTLKYDvupdRg==/3233663698631203.jpg","tns":[],"pic":3233663698631203},"dt":279562,"h":{"br":320000,"fid":0,"size":11186716,"vd":-1.5},"m":{"br":160000,"fid":0,"size":5593901,"vd":-1.06},"l":{"br":96000,"fid":0,"size":3356774,"vd":-1.07},"a":null,"cd":"1","no":5,"rtUrl":null,"ftype":0,"rtUrls":[],"djId":0,"copyright":2,"s_id":0,"rtype":0,"rurl":null,"mst":9,"cp":663018,"mv":0,"publishTime":1417536000007},{"name":"アイロニ","id":31421442,"pst":0,"t":0,"ar":[{"id":191316,"name":"majiko","tns":[],"alias":[]}],"alia":[],"pop":100.0,"st":0,"rt":null,"fee":0,"v":13,"crbt":null,"cf":"","al":{"id":3119399,"name":"Contrast","picUrl":"http://p1.music.126.net/z3DbNjr5UsIR92zl-6L2VQ==/109951163041844005.jpg","tns":[],"pic_str":"109951163041844005","pic":109951163041844005},"dt":244066,"h":{"br":320000,"fid":0,"size":9765660,"vd":-4.23},"m":{"br":160000,"fid":0,"size":4882853,"vd":-3.82},"l":{"br":96000,"fid":0,"size":2929729,"vd":-3.88},"a":null,"cd":"1","no":3,"rtUrl":null,"ftype":0,"rtUrls":[],"djId":0,"copyright":0,"s_id":0,"rtype":0,"rurl":null,"mst":9,"cp":663018,"mv":0,"publishTime":1427817600007},{"name":"secret base ~君がくれたもの~ (10 years after Ver.)","id":33911781,"pst":0,"t":0,"ar":[{"id":16906,"name":"茅野愛衣","tns":[],"alias":[]},{"id":17905,"name":"戸松遥","tns":[],"alias":[]},{"id":16501,"name":"早見沙織","tns":[],"alias":[]}],"alia":["TV动画《我们仍未知道那天所看见的花的名字》片尾曲"],"pop":100.0,"st":0,"rt":null,"fee":0,"v":439,"crbt":null,"cf":"","al":{"id":3266177,"name":"secret base～君がくれたもの～","picUrl":"http://p1.music.126.net/daZcHVIJicL3wXJWMIjAng==/7926379325753633.jpg","tns":[],"pic":7926379325753633},"dt":352493,"h":{"br":320000,"fid":0,"size":14101986,"vd":-2.85},"m":{"br":160000,"fid":0,"size":7051015,"vd":-2.42},"l":{"br":96000,"fid":0,"size":4230626,"vd":-2.48},"a":null,"cd":"1","no":1,"rtUrl":null,"ftype":0,"rtUrls":[],"djId":0,"copyright":0,"s_id":0,"rtype":0,"rurl":null,"mst":9,"cp":663018,"mv":0,"publishTime":1303833600007},{"name":"ありがとう…","id":25638306,"pst":0,"t":0,"ar":[{"id":16686,"name":"KOKIA","tns":[],"alias":[]}],"alia":[],"pop":100.0,"st":0,"rt":"","fee":0,"v":30,"crbt":null,"cf":"","al":{"id":2261097,"name":"ありがとう…","picUrl":"http://p1.music.126.net/RyUJEW4u_Vk65XDSWtn2aA==/6634453162533388.jpg","tns":[],"pic":6634453162533388},"dt":253226,"h":{"br":320000,"fid":0,"size":10131373,"vd":-2.65076E-4},"m":{"br":160000,"fid":0,"size":5065709,"vd":-2.65076E-4},"l":{"br":96000,"fid":0,"size":3039443,"vd":-2.65076E-4},"a":null,"cd":"1","no":1,"rtUrl":null,"ftype":0,"rtUrls":[],"djId":0,"copyright":2,"s_id":0,"rtype":0,"rurl":null,"mst":9,"cp":663018,"mv":5643707,"publishTime":929548800007}],"trackIds":[{"id":467011317,"v":8},{"id":26116370,"v":5},{"id":700032,"v":144},{"id":29769437,"v":13},{"id":31421442,"v":13},{"id":33911781,"v":439},{"id":25638306,"v":30}],"adType":0,"trackNumberUpdateTime":1523639954534,"subscribedCount":0,"cloudTrackCount":0,"userId":308176676,"coverImgId":18247494975126406,"createTime":1521615795731,"updateTime":1523639954534,"name":"阿里嘎多","id":2150535574,"description":null,"ordered":false,"tags":['我的','你的'],"status":0,"playCount":22,"commentThreadId":"A_PL_0_2150535574","trackUpdateTime":1523639977689,"trackCount":7,"coverImgUrl":"http://p1.music.126.net/Rv7XgyTNKwJNS-PAtXvRag==/18247494975126406.jpg","newImported":false,"specialType":0,"highQuality":false,"privacy":0,"shareCount":0,"coverImgId_str":"18247494975126406","commentCount":0},"code":200,"privileges":[{"id":467011317,"fee":8,"payed":0,"st":0,"pl":128000,"dl":0,"sp":7,"cp":1,"subp":1,"cs":false,"maxbr":320000,"fl":128000,"toast":false,"flag":0,"preSell":false},{"id":26116370,"fee":0,"payed":0,"st":0,"pl":320000,"dl":320000,"sp":7,"cp":1,"subp":1,"cs":false,"maxbr":320000,"fl":320000,"toast":false,"flag":0,"preSell":false},{"id":700032,"fee":0,"payed":0,"st":0,"pl":320000,"dl":320000,"sp":7,"cp":1,"subp":1,"cs":false,"maxbr":999000,"fl":320000,"toast":false,"flag":0,"preSell":false},{"id":29769437,"fee":0,"payed":0,"st":-200,"pl":0,"dl":0,"sp":0,"cp":0,"subp":0,"cs":false,"maxbr":320000,"fl":0,"toast":false,"flag":0,"preSell":false},{"id":31421442,"fee":0,"payed":0,"st":0,"pl":320000,"dl":320000,"sp":7,"cp":1,"subp":1,"cs":false,"maxbr":999000,"fl":320000,"toast":false,"flag":0,"preSell":false},{"id":33911781,"fee":0,"payed":0,"st":0,"pl":320000,"dl":320000,"sp":7,"cp":1,"subp":1,"cs":false,"maxbr":999000,"fl":320000,"toast":false,"flag":0,"preSell":false},{"id":25638306,"fee":0,"payed":0,"st":0,"pl":320000,"dl":320000,"sp":7,"cp":1,"subp":1,"cs":false,"maxbr":999000,"fl":320000,"toast":false,"flag":0,"preSell":false}]}
+      DES_HEIGHT:60,
+      songlistInf: null,
+      activeIndex:0,
+      hotComments: [],
+      latelyComments: [],
+      dataReady: true,
+      total: 0,
+      commentsCache:{},
+      expandDes:0 //0为不显示展开图标 1为未展开 2为已经展开
     }
-    
   },
   computed:{
-    id(){
-      return this.$route.params.id
-    },
     tags(){
-      // return this.songlistInf.playlist.tags.join('/')
-      return this.songlistInf.playlist.tags[0] ? this.songlistInf.playlist.tags.map(tag =>{
+      return this.songlistInf.tags[0] ? this.songlistInf.tags.map(tag =>{
         return `<a class="tag" style="color:rgb(64,158,209);cursor:pointer;">${tag}</a>`
       }).join(' / ') : `<a class="tag" style="color:rgb(64,158,209);cursor:pointer;">添加标签</a>`
-    }
-  },
-  mounted(){
-    // console.log(JSON.stringify(this.$route.params));
-    // console.log(this.$route);
-  },
-  methods: {
-    active(index){
-      console.log('test');
-      this.activeIndex = index
     },
-    createTime(time){
-      var date =new Date(time)
+    descript(){
+      if(this.songlistInf.description){
+        let des =new String(this.songlistInf.description)
+        return des.replace(/\n/g,'<br>')
+      }else{
+        return ''
+      }
+        
+    },
+    playCount(){
+      return this.songlistInf.playCount < 100000 ? this.songlistInf.playCount : `${~~(this.songlistInf.playCount / 10000)}万`
+    },
+    // songlistCache(){
+    //   return this.$store.state.songlistCache
+    // },
+    createTime(){
+      let date =new Date(this.songlistInf.createTime)
       return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
     }
+      
+  },
+  created(){ 
+    this.getInf(this.$route.query.id)
+
+  },
+  methods: {
+    singers(arr){
+      return arr.map(art => {
+        return art.name
+      }).join('/')
+    },
+    nav(index){
+      console.log('test');
+      this.activeIndex = index
+      if(index === 1){
+        this.dataReady = false
+        request.commentPlaylist({
+          id: this.$route.query.id,
+        }).then(res => {
+          this.dataReady = true
+          this.hotComments = res.data.hotComments
+          this.latelyComments = res.data.comments
+          this.total = res.data.total
+        })
+      }
+    },
+    updateComment(page){
+      this.dataReady = false
+      if(page in this.commentsCache){
+        this.hotComments = []
+        this.latelyComments = this.commentsCache[page]
+        return
+      }
+      request.commentPlaylist({
+        id: this.$route.query.id,
+        offset: (page - 1) * 20
+      }).then(res => {
+          this.dataReady = true
+          this.hotComments = []
+          this.latelyComments = res.data.comments
+          this.total = res.data.total
+          this.commentsCache[page] = this.latelyComments
+      })
+    },
+    trans(time){
+      // console.log(time);
+      if(time < 10){
+          return `0${time}`
+      }else{
+        return `${time}`
+      }
+    },
+    transDes(des){
+
+    },
+    getSongDuration(time){
+      return `${this.trans(~~(time / 60))}:${this.trans(~~(time % 60))}`
+    },
+    listen(song){
+      console.log("listen");
+      this.$store.commit('changePlayingSong',song)
+      this.$store.commit('changeListeningList',this.songlistInf.songs)
+    },
+    playAll(){
+      this.$store.commit('changeListeningList',this.songlistInf.songs)
+      this.$store.commit('changePlayingIndex', 0)
+    },
+    getInf(id){
+      // if(id in this.songlistCache){
+      //   this.songlistInf = this.songlistCache[id]
+      // }else{
+        request.playlistDetail({
+          id:id
+        }).then(res => {
+          let inf = res.data.result
+          this.songlistInf = {
+            songs: inf.tracks,
+            name: inf.name,
+            songsCount: inf.trackCount,
+            creator:inf.creator,
+            coverImgUrl:inf.coverImgUrl,
+            tags:inf.tags,
+            playCount:inf.playCount,
+            description: inf.description,
+            commentCount: inf.commentCount,
+            createTime: inf.createTime
+          }
+          
+          //缓存 
+          // this.$store.commit('addsonglistCache', {id:id,inf:this.songlistInf})
+
+        })
+      // }
+      
+    },
+    showDes(){
+
+      if(this.expandDes === 1){
+          this.$refs.desContainer.style.height = this.$refs.descript.offsetHeight + 'px'
+          this.expandDes = 2
+      }else if(this.expandDes === 2){
+          this.$refs.desContainer.style.height = this.DES_HEIGHT + 'px'
+          this.expandDes = 1
+      }
+    }
+  },
+  watch:{
+    '$route' (to, from) {
+      let id = this.$route.query.id
+      this.getInf(id)
+    },
+    songlistInf(){
+      // console.log(this.$refs.descript.offsetHeight,this.DES_HEIGHT);
+      setTimeout(() => {
+        if(this.$refs.descript.offsetHeight > this.DES_HEIGHT){
+          console.log('简介被收缩了');
+          this.expandDes = 1
+        }
+      },30)
+      
+    }    
   }
 }
 </script>
@@ -117,6 +319,7 @@ export default {
   position:relative;
   .header{
     min-height:250px;
+
     width:100%;
     text-align:left;
     position:relative;
@@ -135,7 +338,7 @@ export default {
       padding-left:280px;
       top:0;
       p.title{
-        hieght:35px;
+        height:35px;
         line-height:35px;
         i.icon{
           display:inline-block;
@@ -158,7 +361,7 @@ export default {
           font-size:28px;
           font-weight:bold;
           display:inline-block;
-          hieght:28px;
+          height:28px;
           line-height:28px;
           margin-left:20px;
           vertical-align:middle;
@@ -182,7 +385,6 @@ export default {
           border-radius:50%;
           display:inline-block;
           vertical-align:middle;
-          margin-right:10px;
         }
         span{
           display:inline-block;
@@ -190,6 +392,9 @@ export default {
           color:#7F7E7E;
           &:last-child{
             margin:0 20px;
+          }
+          &.nickname{
+            margin-left:50px;
           }
         }
       }
@@ -211,6 +416,7 @@ export default {
           i{
             font-size:18px;
             font-weight:bold;
+            margin-right:5px;
           }
           &.btn{
             border:1px $border solod;
@@ -237,13 +443,30 @@ export default {
         }
       }
       p.des{
+        height:58px;
+        overflow:hidden;
+        white-space:nowrap; 
+        text-overflow:ellipsis;
         &.nodes{
           color:$bule;
         }
-        span{
+        span.tip{
           color:#000;
         }
+        span.descript{
+          color:#6D6C6C;
+        }
         margin-top:15px;
+      }
+      i.expand{
+        float:right;
+        font-size:25px;
+        font-weight:bold;
+        color:#808080;
+        cursor:pointer;
+        &:hover{
+          color:#000;
+        }
       }
     }
   }
@@ -306,19 +529,137 @@ export default {
       }
     }
 
-    .filter{
-              width:100%;
+    .filter,.song{
+      width:100%;
       height:38px;
-      li{
+      padding-left:160px;
+      position:relative;
+      div{
         height:100%;
-        // min-width:60px;
-        border-bottom:1px $border solid;
-        border-right:1px $border solid;
-        float:left;
         line-height:38px;
-        padding-left:10px;
+        &.left{
+          width:160px;
+          position:absolute;
+          left:0;
+          float:left;
+          div{
+            width:80px;
+            padding:0 10px;
+            &.index{
+              text-align:right;
+            }
+          }
+        }
+        &.right{
+          width:100%;
+          float:left;
+          div{
+            padding:0 10px;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+            &.title{
+              width:37.5%;
+            }
+            &.singer,&.album{
+              width:25%;
+            }
+            &.duration{
+              width:12.5%;
+              border-right:none;
+            }
+          }
+          
+        }
+        &.list{
+          // min-width:60px;
+          // width:20%;
+          text-align:left;
+          float:left;
+          line-height:38px;
+          padding-left:10px;
+        }
       }
     }
+    .filter{
+      div.list{
+        border-bottom:1px $border solid;
+        border-right:1px $border solid;
+      }
+    }
+    .song{
+      &.single{
+        background-color:$lightgray;
+      }
+      &.song-pick{
+        background-color: $hovergray !important;
+      }
+      &:hover{
+        background-color: $hovergray;
+      }
+    }
+
+
+    .comments{
+      // position:absolute;
+      // width:700px;
+      padding:0 40px;
+      .tag{
+        font-size:20px;
+        // border-bottom:1px rgb(207,206,208) solid;
+        padding:5px 0px;
+        margin-bottom:5px;
+        text-align:left;
+      }
+      .write-comment{
+        position:relative;
+        text-align:left;
+        .write-bg{
+          position:relative;
+          height:60px;
+          width:100%;
+          background-color:rgb(240,240,242);
+          padding:12px;
+          margin-top:15px;
+          margin-bottom:30px;
+        }
+        .write{
+          height:36px;
+          width:100% -12;
+          box-shadow:1px 1px 1px $clickGray;
+          line-height:30px;
+          font-size:18px;
+          padding:5px;
+          // border:1px $clickGray solid;
+          background-color:#fff;
+          // transform:scale(.9,.9)
+          i{
+            font-size:18px;
+            line-height:30px;
+            margin-right:8px;
+            &.right{
+              float:right;
+            }
+          }
+        }
+        
+      }
+      
+      .brilliants{
+        margin:30px 0;
+        .more{
+          font-size:20px;
+          width:100%;
+          text-align:center;
+          margin:30px 0;
+          i{
+            font-size:20px;
+          }
+        }
+      }
+
+    }
+
   }
 }
 

@@ -1,88 +1,97 @@
 <template>
 	<div class="playing">
-		<div class="playing-bg" :style="{backgroundImage:'url(http://music.163.com/api/img/blur/'+playingSong.al.pic+'.jpg)'}">
-			<!-- <svg width="100%" height="100%" version="1.1" >
-        		<defs>          
-           			<radialGradient id="grey_blue" cx="40%" cy="50%" r="80%" fx="40%" fy="60%">
-                		<stop offset="10%" style="stop-color:rgb(248,248,248); stop-opacity:.4"/>
-                		<stop offset="70%" style="stop-color:rgb(248,248,250); stop-opacity:1"/>
-            		</radialGradient>
-        		</defs>
-        		<rect  width="100%" height="100%" style="fill:rgba(0,0,0,.2);fill:url(#grey_blue)"/> -->
-   			</svg>
+		<div class="playing-bg" :style="{backgroundImage:'url(http://music.163.com/api/img/blur/'+playingSong.album.picId+'.jpg)'}" v-if="playingSong.id">
 		</div>
 		<div class="playing-container">
-			<div class="left" >
-				<img src="/static/img/holder.png" class="holder" :class="{ onPlaying:isPlaying}">
-				<div class="disc" :style="{transform:'rotate('+rotateDeg+'deg)',backgroundImage:'url('+playingSong.al.picUrl+')'}">
-					<img src="/static/img/disc.png" class="song-pic"> <!--专辑图片 -->
-				</div>
-				<ul>
-					<li><i class="iconfont icon-msnui-zoom-finger minimize"></i></li>
-					<li></li>
-					<li></li>
-					<li></li>
-				</ul>
-			</div>
+			<disc :pic="playingSong.album.picUrl" class="left"></disc>
 			<div class="right">
 				<div class="song-inf">
-					<h1>{{playingSong.name}}<span class="quality">320k</span></h1>
-					<ul>
-						<li>专辑:<span class="inf">{{playingSong.al.name}}</span></li>
-						<li>歌手:<span class="inf">{{playingSong.ar[0].name}}</span></li>
-						<li>来源:<span class="inf">阿里嘎多</span></li>
-					</ul>
-				</div>
-				<div class="lyrics" ref="lyc_con" @mouseover="lycMoveCancel" @mouseout='lycMoveBegin'>
-					<ul class="lrc-con" ref="lyc_ul" v-if="!nolyc">
-						<li v-for="(lyric,time,index) in lyrics.lrc" :class="{playingx:index === (lyricIndex - 1)}" ref="lyrics">
-							<div class='lrc'>{{lyric}}</div>
-							<div class="tlrc" v-if="lyrics.tlrc">{{lyrics.tlrc[''+time+'']}}</div>
-						</li>
-					</ul>
-					<div v-if="!nolyc || lyrics.creator">
-						贡献者：{{lyrics.creator}}
-					</div>
-					<span v-if="nolyc" class="nolyc">纯音乐，请您欣赏</span>
-				</div>
-
-				<div class="rightx">
 					<i class="iconfont icon-msnui-zoom-finger minimize" @click="minimize"></i>
-					<i class="iconfont icon-xiangshangshouqi-yuankuang sup-icon "></i>
-					<i class="iconfont icon-xiangxiazhankai-yuankuang sup-icon"></i>
-					<i class="iconfont icon-wenhao sup-icon"></i>
-				</div>				
-			</div>
-		</div>
+					<h1>{{playingSong.name}}<span class="quality">320k</span></h1>
+					<ul v-if="!DJProgram" class="si">
+						<li>专辑:<span class="inf">{{playingSong.album.name}}</span></li>
+						<li>歌手:<span class="inf">{{playingSong.artists[0].name}}</span></li>
+						<li>来源:<span class="inf">{{source}}</span></li>
+					</ul>
+					<div v-if="DJProgram">
+						<ul class="di">
+							<li>主播:<span class="inf">{{DJProgram.dj.nickname}}</span></li>
+							<li>来源:<span class="inf">{{DJProgram.radio.name}}</span></li>
+						</ul>
+						<div class="listen-count">
+							{{DJProgram.radio.name}}
+							<a>
+								<i class="iconfont icon-xingxing1"></i>
+								订阅({{DJProgram.radio.subCount < 100000 ? DJProgram.radio.subCount : (DJProgram.radio.subCount / 10000).toFixed(0)+'万'}})
+							</a>
+						</div>
+						<p class="extra-inf">
+							<span>创建时间：{{transTime()}}</span>
+							<span>已播放：{{DJProgram.listenerCount < 100000 ? DJProgram.listenerCount : (DJProgram.listenerCount  / 10000).toFixed(0)+'万次'}}</span>
+						</p>
+					</div>
+				</div>
+				<div class="lyrics" :class='{sl:!DJProgram,dl:DJProgram}'>
+					<div v-if="!DJProgram" class="simple-music">
+						<div class="rightx" ref="lyc_con" @mouseover="lycMoveCancel" @mouseout='lycMoveBegin'>
+							<ul class="lrc-con" ref="lyc_ul" v-if="!nolyc">
+								<li v-for="(lyric,index) in lyrics.lrc" :class="{playingx:index === (lyricIndex - 1)}" ref="lyrics">
+									<p class='lrc'>{{lyric[1]}}</p>
+									<p class="tlrc" v-if="lyrics.tlrc">{{lyrics.tlrc[lyric[0]]}}</p>
+								</li>
+							</ul>
+							<div v-if="!nolyc || lyrics.creator">
+								贡献者：{{lyrics.creator}}
+							</div>
+							<span v-if="nolyc" class="nolyc">纯音乐，请您欣赏</span>
+						</div>
 
+						<div class="leftx">
+							<i class="iconfont icon-xiangshangshouqi-yuankuang sup-icon "></i>
+							<i class="iconfont icon-xiangxiazhankai-yuankuang sup-icon"></i>
+							<i class="iconfont icon-wenhao sup-icon"></i>
+						</div>
+					</div>
+
+					<div class="rightx" v-if="DJProgram">
+						<span class="tip">{{DJProgram.radio.category}}</span>
+						<span class="desc" v-if="descript" v-html="descript"></span>
+					</div>
+
+				</div>
+			</div>
+						
+		</div>
 
 	</div>
 </template>
 
 <script>
+import disc from './disc'
+
+import throttle from '../../../utility/throttle'
+import time from '../../../utility/transTime'
+import request from '../../../request/request'
+
 export default {
 	name: 'listenList',
-	props:{
-		'song':{
-			type:Object,
-			default:() => {}
-		}
-	},
+	components:{
+    	'disc': disc
+  	},
 	data(){
 		return {
 			lyrics:{
-				'lrc':{},
+				'lrc':[],
 				'tlrc':{},
 				'timeLine':[],
 				'creator':'yomi',
 			},
-			rotateDeg:0,
-			interval:null,
 			lyricIndex:0,
 			lyricScrollInterval:null,
 			isLycMove:true,
 			nolyc:false,
-			lycContainerHeight:0
+			lycContainerHeight:0,
+			DJProgram:null,
 		}
 	},
 	computed:{
@@ -94,51 +103,86 @@ export default {
 		},
 		playingSong(){
 			return this.$store.state.playingSong
-		}
+		},
+		descript(){
+	      if(this.DJProgram && this.DJProgram.description){
+	        var des =new String(this.DJProgram.description)
+	        return des.replace(/\n/g,'<br>')
+	      }else{
+	        return ''
+	      }
+    	},
+    	source(){ 
+    		return this.playingSong.source || '阿里嘎多'
+    	}
 	},
 	mounted(){
-		this.beginInit()
+		this.audio.addEventListener('timeupdate',throttle(this.searchNowLyric, 500))
 	},
 	methods:{
+		transTime(){
+			// console.log('test');
+			return time.formatDate(this.DJProgram.createTime, '-')
+		},
 		lycMoveCancel(){
-			if(this.isLycMove)
+			if(this.isLycMove){
 				this.isLycMove = false
+			}
 		},
 		lycMoveBegin(){
-			if(!this.isLycMove)
+			if(!this.isLycMove){
 				this.isLycMove = true
+			}
 		},
-		beginInit(){
-			this.audio.addEventListener('timeupdate', () => {
-				if(!this.nolyc && this.isLycMove){
-					var flagTime = this.lyrics.timeLine[this.lyricIndex]
-					if(this.audio.currentTime > flagTime && this.audio.currentTime < this.lyrics.timeLine[this.lyricIndex+1]){//自然播放情况
-						flagTime = this.lyrics.timeLine[this.lyricIndex++]
-					// console.log('自然播放情况',this.lyricIndex);
-					}else if(this.audio.currentTime > this.lyrics.timeLine[this.lyricIndex + 1]){//快进情况
-						this.lyricIndex = this.searchNowIndex(this.lyrics.timeLine, this.audio.currentTime, this.lyricIndex, this.lyrics.timeLine.length)
-					}else if(this.audio.currentTime < this.lyrics.timeLine[this.lyricIndex - 1]){//快退情况
-						this.lyricIndex = this.searchNowIndex(this.lyrics.timeLine, this.audio.currentTime, 0, this.lyricIndex)
-					}
+		searchNowLyric(){
+			if(!this.nolyc){
+				let currentTime = this.audio.currentTime,
+					flagTime = this.lyrics.timeLine[this.lyricIndex]
+				if(currentTime > flagTime && currentTime < this.lyrics.timeLine[this.lyricIndex+1]){//自然播放情况
+					flagTime = this.lyrics.timeLine[this.lyricIndex++]
+				// console.log('自然播放情况',this.lyricIndex);
+				}else if(currentTime > this.lyrics.timeLine[this.lyricIndex + 1]){//快进情况
+					this.lyricIndex = this.searchNowIndex(this.lyrics.timeLine, currentTime, this.lyricIndex, this.lyrics.timeLine.length)
+				}else if(currentTime < this.lyrics.timeLine[this.lyricIndex - 1]){//快退情况
+					this.lyricIndex = this.searchNowIndex(this.lyrics.timeLine, currentTime, 0, this.lyricIndex)
 				}
-			})
+			}
 		},
-		transLyric(lyrics){
-			if(!lyrics) return {}
-			var lyc = {}
-			var timeAndLyric = lyrics.split('\n')
-			console.log(JSON.stringify(timeAndLyric));
-			if(lyrics.indexOf('[by') > -1){
+		transLyric(lyrics, isLyc = true){
+			let i = 0,
+				lyc = isLyc ?  [] :  {},
+				timeAndLyric
+			if (!lyrics) {
+				return lyc
+			}
+
+			timeAndLyric = lyrics.split('\n')
+			if (lyrics.indexOf('[by') > -1) {
 				timeAndLyric.shift()
 			}
-			var times = lyrics.match(/\d+:\d+.\d+/g)
-			for(let i = 0; i < times.length; i++){
-				var min = Number(String(times[i].match(/\d+/i)).slice(1)),
-                sec = Number(String(times[i].match(/\:\d+.\d+/i)).slice(1));
-            	var time = (min * 60 + sec).toFixed(2);
-            	lyc[time] = timeAndLyric[i].replace(/\[.*\]/g,'')       	
+
+			for (; i < timeAndLyric.length; i++) {
+				let t = timeAndLyric[i].match(/\d+:\d+.\d+/g)
+				if (t) {
+					t.forEach(item => {
+						let min = Number(String(item.match(/\d+/i)).slice(1)),
+							sec = Number(String(item.match(/\:\d+.\d+/i)).slice(1)),
+							time = (min * 60 + sec).toFixed(2)
+						if(isLyc){
+							lyc.push([time, timeAndLyric[i].replace(/\[.*\]/g, '')])
+						}else{
+							lyc[time] = timeAndLyric[i].replace(/\[.*\]/g, '')
+						}						
+					})
+				}
 			}
-			return lyc;
+			if(isLyc){
+				lyc.sort((a, b) => {
+					return a[0] - b[0]
+				})
+			}
+			
+			return lyc
 		},
 		lrcScroll(el,scrollPosition,time){
 			console.log("lrcScroll");
@@ -147,7 +191,7 @@ export default {
 			}else if(scrollPosition < 0){
 				scrollPosition = 0
 			}
-			// clearInterval(this.lyricScrollInterval)
+			clearInterval(this.lyricScrollInterval)
 			var nowTop = el.scrollTop 
 			var moveLeagth = scrollPosition - nowTop
 			var step = moveLeagth / time * 16.7 
@@ -185,48 +229,55 @@ export default {
 
 	},
 	watch:{
-		isPlaying(val){
-			if(val){
-				clearInterval(this.interval)
-				this.interval=setInterval(()=>{
-					this.rotateDeg = (this.rotateDeg + 0.4) % 360
-				}, 1000 / 60)
-			}else{
-				clearInterval(this.interval)
-			}
-		},
 		lyricIndex(val,oldValue){
-			console.log(val);
-			if(this.isLycMove)
-				this.lrcScroll(this.$refs.lyc_con, this.$refs.lyrics[val].offsetTop - 217, 400)	
+			var lis = this.$refs.lyrics
+			if(this.isLycMove){
+				this.lrcScroll(this.$refs.lyc_con, lis[val].offsetTop - 217, 400)	
+			}
 		},
 		playingSong(val){
 			this.lyricIndex = 0
 			this.lyrics = {
-				'lrc':{},
-				'tlrc':{},
+				'lrc':[],
+				'tlrc':[],
 				'timeLine':[],
 				'creator':'yomi',
 			}
-			this.axios.get(`http://musicapi.leanapp.cn/lyric?id=${val.id}`).then(res=>{
-				if(res.data.nolyric){//纯音乐
-					console.log(res.data.nolyric+"纯音乐");
-					this.nolyc = true
-					return
-				}else {
+			if(!val.hasOwnProperty('programId') || val.album.company){ //普通音乐
+				this.DJProgram = null
+				request.lyric({
+					id: val.id
+				}).then(res=>{
+					if(res.data.nolyric){//纯音乐
+						console.log(res.data.nolyric+"纯音乐");
+						this.nolyc = true
+						return
+					}
+
 					this.nolyc = false
-				}
-				this.lyrics.lrc = this.transLyric(res.data.lrc.lyric)
-				this.lyrics.tlrc = this.transLyric(res.data.tlyric.lyric)
-				for(var key in this.lyrics.lrc){//时间线
-					this.lyrics.timeLine.push(Number(key))
-				}
-				//歌词贡献者
-				this.lyrics.creator = res.data.lyricUser.nickname ? res.data.lyricUser.nickname : res.data.transUser.nickname ? res.data.transUser.nickname : ''
+					this.lyrics.lrc = this.transLyric(res.data.lrc.lyric)
+					this.lyrics.tlrc = this.transLyric(res.data.tlyric.lyric, false)
+					this.lyrics.lrc.forEach(item => {
+						this.lyrics.timeLine.push(Number(item[0]))
+					});
+					// console.log(JSON.stringify(this.lyrics.tlrc),res.data.tlyric.lyric,this.lyrics.timeLine);
+					//歌词贡献者
+					this.lyrics.creator = res.data.lyricUser && res.data.lyricUser.hasOwnProperty('nickname') ? res.data.lyricUser.nickname : res.data.transUser && res.data.transUser.hasOwnProperty('nickname ') ? res.data.transUser.nickname : ''
 
-				this.lyrics = Object.assign({}, this.lyrics)
+					this.lyrics = Object.assign({}, this.lyrics)
 
-			})
+				})
+			}else if(val.hasOwnProperty('programId')){ //DJ 电台节目
+				this.nolyc = true
+				console.log(val.programId);
+				request.djProgramDetial({
+					id:val.programId
+				}).then(res => {
+					this.DJProgram = res.data.program
+					// this.DJProgram['description'] = this.DJProgram['description'].split('\n')
+				})
+
+			}
 		}
 	}
 }
@@ -261,6 +312,26 @@ export default {
 	height:$userMenuHeight;
 	width:100%;
 	background-color:$mainColor;
+
+	i.minimize{
+		color:rgb(102,102,102);
+		z-index: 100;
+		text-align:center;
+		width:40px;
+		height:30px;
+		line-height:35px;
+		font-size:25px;
+		border:1px rgb(207,206,208) solid;
+		border-radius:5px;	
+		position:absolute;
+		background-color:rgb(251,251,251);
+		right:0px;
+		top:30px;
+		&:hover{
+			background-color:rgb(251,251,252)
+		}
+	}
+
 	.playing-bg{
 		background-image:url("http://music.163.com/api/img/blur/16629013858493883.jpg");
 		background-position: center;
@@ -289,18 +360,6 @@ export default {
 	.playing-container{
 			// border:1px red solid;
 		position:relative;
-		// &:after{
-		// 	content:"";
-		// 	display:block;
-		// 	width:100%;
-		// 	height:100%;
-		// 	position:absolute;
-		// 	top:0;
-		// 	left:0;
-		// 	background-color:#EAEAEA;
-		// 	opacity:0.4;
-		// 	z-index:1
-		// }
 		background-color:transparent;
 		z-index:2;
 
@@ -308,51 +367,23 @@ export default {
 		height:580px;
 		margin:0 auto;
 		position:relative;
+
 		.left{
 			text-align:center;
 			z-index:2;
 			width:50%;
-			// border:1px black solid;
 			float:left;
 			height:100%;
 			position:relative;
-			.disc{
-				background-image:url("http://p1.music.126.net/kQqkFAqZwOLTLKYDvupdRg==/3233663698631203.jpg");
-				background-repeat:no-repeat;
-				background-size:270px 270px;
-				height:420px;
-				width:420px;
-				background-position:center center;
-				position:relative;
-				margin:0 auto;
-				top:-130px;
-				// &.rotating{
-				// 	// transform:translateX(50px);
-				// 	animation: ro 5s infinite  linear;
-				// }
-			}
-			.holder{
-				height:172px;
-				width:115px;
-				position:relative;
-				top:-15px;
-				transform:rotate(-40deg);
-				transform-origin:8% 8%;
-				transition:all .3s;
-				z-index:5;
-				&.onPlaying{
-					transform:rotate(-15deg);
-					top:-20px;
-				}
-			}
 		}
 		.right{
-			z-index:2;
-			position:relative;
-			text-align:left;
-			height:100%;
-			width:40%;
+			width: 50%;
+			text-align:left;	
 			float:left;
+			height:100%;
+			position: relative;
+			z-index:2;
+			height:100%;
 			.quality{
 				border:2px #F06D6D solid;
 				color:#F06D6D;
@@ -364,9 +395,43 @@ export default {
 				width:100%;
 				height:145px;;
 				padding:30px 0;
-				// border:1px red solid;
+				.listen-count{
+					margin: 20px 0;
+					font-size: 20px;
+					color:rgb(145,145,147);
+					a{
+						margin-left: 20px;
+						color:#000;
+						padding: 0 5px;
+						display: inline-block;
+						height: 27px;
+						line-height: 27px;
+						min-width: 100px;
+						text-align: center;
+						border:1px rgb(165,165,167) solid;
+						border-radius: 5px;
+						font-size: 16px;
+						background-color: rgb(232,232,232);
+						i{
+							color:rgb(145,145,147);
+						}
+					}
+				}
+				.extra-inf{
+					margin-top: 45px;
+					span{
+						margin-right: 20px;	
+					}
+				}
 				ul {
-					margin-top:20px;
+					height:19px;
+					
+					&.si{
+						margin-top:20px;	
+					}
+					&.di{
+						margin-top:10px;	
+					}
 					li{
 						float:left;
 						width:160px;
@@ -390,14 +455,58 @@ export default {
 				}
 			}
 			.lyrics{
-				width:100%;
-				// border:1px black solid;
-				border-right:1px rgb(207,206,208) solid;	
-				height:435px;
-				overflow-y:scroll;
+				width:100%; 
 				text-align:left;
 				background-color:transparent;
-				position:relative;
+				position:absolute;
+				bottom: 0;
+				&.sl{
+					height:435px;
+				}
+				&.dl{
+					height:355px;
+				}
+				.simple-music{
+					position:relative;
+					height:100%;
+					width:100%;
+				}
+				div.rightx{
+					width: 80%;
+					border-right:1px rgb(207,206,208) solid;
+					overflow-y:scroll;
+					height:100%;
+				}
+				div.leftx{
+					width: 20%;
+					position: absolute;
+					right: 0;
+					height: 100%;
+					top:0;
+					i{
+						display:block;
+						cursor:pointer;
+						
+						&.sup-icon{
+							position:absolute;
+							color:rgb(197,196,201);
+							font-size:25px;
+							left:5px;
+							&:hover{
+								color:rgb(191,192,197);
+							}
+							&.icon-xiangshangshouqi-yuankuang{
+								top:0px;
+							}
+							&.icon-xiangxiazhankai-yuankuang{
+								top:35px;
+							}
+							&.icon-wenhao{
+								bottom:0;
+							}
+						}
+					}
+				}
 				ul.lrc-con li {
 					min-height:30px;
 					padding:8px 0;
@@ -423,66 +532,19 @@ export default {
 					transform:translate(-60%,-50%);
 					font-size:20px;
 				}
+				span.tip{
+		          font-size:14px;
+		          color:$mainRed;
+		          border:1px $mainRed solid;
+		        }
+		        span.desc{
+		        	font-size:18px;
+		        }
 			}
+			
+			
 		}
 
-
-		.rightx{
-			position:absolute;
-			top:0;
-			right:-25%;
-			width:25%;
-			height:100%;
-			z-index:20;
-			i{
-				display:block;
-				cursor:pointer;
-				&.minimize{
-					color:rgb(102,102,102);
-					text-align:center;
-					width:40px;
-					height:30px;
-					line-height:30px;
-					font-size:25px;
-					border:1px rgb(207,206,208) solid;
-					border-radius:5px;	
-					position:absolute;
-					background-color:rgb(251,251,251);
-					right:30px;
-					top:30px;
-					&:hover{
-						background-color:rgb(251,251,252)
-					}
-				}
-				&.sup-icon{
-					position:absolute;
-					color:rgb(197,196,201);
-					font-size:25px;
-					left:5px;
-					&:hover{
-						color:rgb(191,192,197);
-					}
-					&.icon-xiangshangshouqi-yuankuang{
-						top:145px;
-					}
-					&.icon-xiangxiazhankai-yuankuang{
-						top:180px;
-					}
-					&.icon-wenhao{
-						bottom:0;
-					}
-				}
-			}
-		}
-
-		.song-pic{
-			height:420px;
-			width:420px;
-			position:absolute;
-			left:50%;
-			// top:50px;
-			transform:translateX(-50%);
-		}
 	}
 }
 </style>

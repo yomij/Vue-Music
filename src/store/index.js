@@ -8,73 +8,20 @@ export default new vuex.Store({
 	state: {
 		userId: 0,
 		listeningList: [],
-		rotateDeg: 0,
 		isPlaying: false,
+		recommends: {},
+		// songlistCache: {
+		// 	keys: [],
+		// },
 		playingSong: {
-			"name": "我爱的人",
-			"id": 350651,
-			"pst": 0,
-			"t": 0,
-			"ar": [{
-				"id": 3685,
-				"name": "林宥嘉",
-				"tns": [],
-				"alias": []
-			}],
-			"alia": [],
-			"pop": 100,
-			"st": 0,
-			"rt": "600902000009289406",
-			"fee": 8,
-			"v": 186,
-			"crbt": null,
-			"cf": "",
-			"al": {
-				"id": 34552,
-				"name": "星光同学会",
-				"picUrl": "http://p1.music.126.net/2LAkRtcpKlfsZYniAfxHZA==/109951163167481875.jpg",
-				"tns": [],
-				"pic_str": "109951163167481875",
-				"pic": 109951163167481870
-			},
-			"dt": 269666,
-			"h": {
-				"br": 320000,
-				"fid": 0,
-				"size": 10789660,
-				"vd": 0
-			},
-			"m": {
-				"br": 192000,
-				"fid": 0,
-				"size": 6473813,
-				"vd": 0
-			},
-			"l": {
-				"br": 128000,
-				"fid": 0,
-				"size": 4315890,
-				"vd": 0
-			},
-			"a": null,
-			"cd": "1",
-			"no": 3,
-			"rtUrl": null,
-			"ftype": 0,
-			"rtUrls": [],
-			"djId": 0,
-			"copyright": 2,
-			"s_id": 0,
-			"rtype": 0,
-			"rurl": null,
-			"mst": 9,
-			"cp": 677020,
-			"mv": 0,
-			"publishTime": 1181232000000
+			"id": 0,
 		},
 		audio: new Audio(),
 		maximize: false,
-		playingIndex: 0
+		playingIndex: 0,
+		navIndex: 0, //当前激活的index
+		DJKinds: [],
+		scrollTop: 0
 	},
 	mutations: {
 		login(state, id) {
@@ -86,10 +33,12 @@ export default new vuex.Store({
 		pause(state) {
 			state.isPlaying = false
 		},
-		rotate(state) {
-			state.rotateDeg++
-		},
 		changePlayingSong(state, song) {
+
+			if (song.hasOwnProperty('mainSong')) {
+				state.playingSong = song.mainSong
+				console.log(JSON.stringify(state.playingSong));
+			}
 			state.playingSong = song
 		},
 		maximize(state) {
@@ -98,38 +47,73 @@ export default new vuex.Store({
 		minimize(state) {
 			state.maximize = false
 		},
-		addSong(state, song, index) {
+		addSong(state, song) {
 			var ind = state.playingIndex
 			state.listeningList.splice(state.playingIndex++, 0, song)
 			state.playingSong = song
 			state.playingIndex--
 				console.log('state.playingIndex' + state.playingIndex);
 		},
+		changeListeningList(state, list) {
+			state.listeningList = list
+		},
 		changePlayingIndex(state, index) {
 			state.playingIndex = index
 			state.playingSong = state.listeningList[index]
+		},
+		// addsonglistCache(state, ob) {
+		// 	if (state.songlistCache.keys.length < 10) {
+		// 		console.log('开始缓存');
+		// 		state.songlistCache[ob.id] = ob.inf
+		// 		state.songlistCache.keys.push(ob.id)
+		// 		// console.log(JSON.stringify(ob.inf));
+		// 	} else {
+		// 		delete state.songlistCache[state.songlistCache.keys.shift()]
+		// 		this.songlistCache[ob.id] = ob.inf
+		// 		this.songlistCache.keys.push(ob.id)
+		// 	}
+		// },
+		addRecommend(state, obj) {
+			state.recommends[obj.name] = obj.recommend
+		},
+		navAcive(state, index) {
+			state.navIndex = index
+		},
+		scroll(state, scrollTop) {
+			state.scrollTop = scrollTop
+		},
+		addDJkind(state, kind) {
+			state.DJKinds.push(kind)
+		},
+		removeDJkind(state) {
+			return state.DJKinds.pop()
+		},
+		initDJKind(state) {
+			state.DJKinds = []
 		}
 	},
 	actions: {
 		searchSongAndPlay({
 			commit,
 			state
-		}, id) {
-			var hasThis = false
+		}, song) {
+			let hasThis = false
+
 			for (let i = state.listeningList.length - 1; i > -1; i--) {
-				if (state.listeningList[i].id === id) {
+				if (state.listeningList[i].hasOwnProperty('mainSong')) {
+					continue
+				}
+				if (state.listeningList[i].id === song.id) {
 					hasThis = true
 					commit('changePlayingSong', state.listeningList[i])
 					break
 				}
 			}
-			if (!hasThis)
-				axios.get(`http://musicapi.leanapp.cn/song/detail?ids=${id}`).then(res => {
-					commit('addSong', res.data.songs[0], state.playingIndex)
-					// commit('changePlayingSong', res.data.songs[0])
-				}).catch(() => {
-					console.log('搜索播放歌曲失败');
-				})
-		}
+
+
+			if (!hasThis) {
+				commit('addSong', song, state.playingIndex)
+			}
+		},
 	}
 })

@@ -1,6 +1,6 @@
 <template>
   <div class="banner" >
-    <div class="imgs-container">
+    <div class="imgs-container" v-if="imgs.length">
       <ul @mouseover="movePause"
           @mouseout="moveBegin">
           <li
@@ -12,7 +12,7 @@
             nextPicMoveLeft:isMoveRight
           }">
             <img
-              :src="imgs[(activedImg-1)>=0?activedImg-1:imgs.length-1].pic">
+              :src="imgs[(activedImg-1)>=0?activedImg-1:imgs.length-1].picUrl">
           </li>
           <li
             class="nowPic"
@@ -23,7 +23,7 @@
             }">
             <!-- <span class="mask" v-show="isMoveLeft"></span> -->
             <img
-              :src="imgs[activedImg].pic">
+              :src="imgs[activedImg].picUrl">
           </li>
           <li
             class="nextPic"
@@ -35,7 +35,7 @@
           }"
           >
             <img
-              :src="imgs[(activedImg+imgs.length+1)%imgs.length].pic">
+              :src="imgs[(activedImg+imgs.length+1)%imgs.length].picUrl">
           </li>
       </ul>
     </div>
@@ -55,15 +55,9 @@
 <script>
 export default {
   name: 'banner',
-  props: {
-    imgs: {
-      type: Array,
-      default: () => [{"targetType":10,"titleColor":"red","typeTitle":"新碟首发","encodeId":"3165446","adid":null,"adLocation":null,"targetId":3165446,"exclusive":false,"monitorClick":null,"monitorImpress":null,"monitorType":null,"monitorBlackList":null,"adSource":null,"extMonitor":null,"extMonitorInfo":null,"monitorClickList":[],"monitorImpressList":[],"url":"","pic":"http://p3.music.126.net/s25q2x5QyqsAzilCurD-2w==/7973658325212564.jpg"},{"targetType":1005,"titleColor":"blue","typeTitle":"专栏","encodeId":"170001","adid":null,"adLocation":null,"targetId":170001,"exclusive":false,"monitorClick":null,"monitorImpress":null,"monitorType":null,"monitorBlackList":null,"adSource":null,"extMonitor":null,"extMonitorInfo":null,"monitorClickList":[],"monitorImpressList":[],"url":"http://music.163.com/m/topic/170001","pic":"http://p4.music.126.net/V9-MXz6b2MNhEKjutoDWIg==/7937374441542745.jpg"},{"targetType":1005,"titleColor":"blue","typeTitle":"专栏","encodeId":"169001","adid":null,"adLocation":null,"targetId":169001,"exclusive":false,"monitorClick":null,"monitorImpress":null,"monitorType":null,"monitorBlackList":null,"adSource":null,"extMonitor":null,"extMonitorInfo":null,"monitorClickList":[],"monitorImpressList":[],"url":"http://music.163.com/m/topic/169001","pic":"http://p4.music.126.net/CTU5B9R9y3XyYBZXJUXzTg==/2897213141428023.jpg"},{"targetType":1000,"titleColor":"red","typeTitle":"歌单","encodeId":"81662699","adid":null,"adLocation":null,"targetId":81662699,"exclusive":false,"monitorClick":null,"monitorImpress":null,"monitorType":null,"monitorBlackList":null,"adSource":null,"extMonitor":null,"extMonitorInfo":null,"monitorClickList":[],"monitorImpressList":[],"url":"","pic":"http://p4.music.126.net/tGPljf-IMOCyPvumoWLOTg==/7987951976374270.jpg"},{"targetType":3000,"titleColor":"blue","typeTitle":"广告","encodeId":"0","adid":null,"adLocation":null,"targetId":0,"exclusive":false,"monitorClick":null,"monitorImpress":null,"monitorType":null,"monitorBlackList":null,"adSource":null,"extMonitor":null,"extMonitorInfo":null,"monitorClickList":[],"monitorImpressList":[],"url":"http://wlj2015.qq.com/","pic":"http://p4.music.126.net/mp2Y2n4ueZzIj6JSnUOdtw==/7875801790676538.jpg"},{"targetType":10,"titleColor":"red","typeTitle":"新碟首发","encodeId":"3165337","adid":null,"adLocation":null,"targetId":3165337,"exclusive":false,"monitorClick":null,"monitorImpress":null,"monitorType":null,"monitorBlackList":null,"adSource":null,"extMonitor":null,"extMonitorInfo":null,"monitorClickList":[],"monitorImpressList":[],"url":"","pic":"http://p3.music.126.net/e0gGadEhjur2UuUpDF9hPg==/7788940372125389.jpg"}]
-    }
-  },
   data () {
     return {
-      imgList: this.imgs,
+      imgs:[],
       activedImg: 0,
       isJumpAnimation: false,
       isMoveLeft: false,
@@ -72,10 +66,14 @@ export default {
     }
   },
   created () {
+    this.axios.get('http://localhost:3000/banner').then(res => {
+      this.imgs = res.data.banners
+    })
     this.moveBegin()
   },
   methods: {
     jump (index) {
+      console.log('jump');
       this.movePause()
       if (Math.abs(index - this.activedImg) > 1) {
         this.isJumpAnimation = true
@@ -215,6 +213,9 @@ export default {
         bottom:0;
         z-index:20;
      }
+    }
+    .imgs-control{
+      height:50px;
     }
     .imgs-control ul{
       display: table;

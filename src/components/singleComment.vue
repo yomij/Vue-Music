@@ -9,10 +9,10 @@
 			<div class="extra">
 				<p class="time">{{time}}</p>	
 				<ul>
-					<li >举报</li>
+					<li v-show="reportShow">举报</li>
 					<li><i class="iconfont icon-unie60b"></i>({{comment.likedCount}})</li>
 					<li>分享</li>
-					<li>回复</li>
+					<li class="last">回复</li>
 				</ul>
 			</div>
 		</div>
@@ -22,15 +22,19 @@
 <script>
 export default {
 	name:'singleComment',
-	props:{
-		comment:{
+	props: {
+		comment: {
 			type: Object,
 			required: true,
 			default:() => {}
+		},
+		reportShow: {
+			type: Boolean,
+			default: false
 		}
 	},
-	computed:{
-		time(){
+	computed: {
+		time() {
 			var date = new Date(this.comment.time)
 			var hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
 			var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
@@ -49,11 +53,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../../style/global.scss';
+@import '../style/global.scss';
 
 .single-comment{
 	width:100%;
-	border-bottom:1px rgb(207,206,208) solid;
+	border-top:1px rgb(227,226,228) solid;
 	padding:20px 0;
 	text-align:left !important;
 	.user-avatar{
@@ -98,10 +102,16 @@ export default {
 				font-size:16px;
 				li{
 					float:left;
-					margin-left:10px;
-					padding-left:10px;
-					border-left:1px rgb(180,180,182) solid;
+					// margin-left:10px;
+					padding:0 10px;
+					border-right:1px rgb(180,180,182) solid;
 					color:rgb(180,180,182)
+
+				}
+				.last{
+					border-right:none !important;
+					padding-right:0;
+					// background-color:red;
 				}
 				
 			}
