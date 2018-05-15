@@ -6,7 +6,7 @@ Vue.use(vuex)
 /* eslint-disable */
 export default new vuex.Store({
 	state: {
-		isLogin: false,
+		userId: 0,
 		listeningList: [],
 		rotateDeg: 0,
 		isPlaying: false,
@@ -77,6 +77,9 @@ export default new vuex.Store({
 		playingIndex: 0
 	},
 	mutations: {
+		login(state, id) {
+			state.userId = id
+		},
 		play(state) {
 			state.isPlaying = true
 		},
@@ -96,12 +99,15 @@ export default new vuex.Store({
 			state.maximize = false
 		},
 		addSong(state, song, index) {
-			state.listeningList.splice(index + 2, 0, song)
+			var ind = state.playingIndex
+			state.listeningList.splice(state.playingIndex++, 0, song)
 			state.playingSong = song
-			state.playingIndex++
+			state.playingIndex--
+				console.log('state.playingIndex' + state.playingIndex);
 		},
 		changePlayingIndex(state, index) {
 			state.playingIndex = index
+			state.playingSong = state.listeningList[index]
 		}
 	},
 	actions: {

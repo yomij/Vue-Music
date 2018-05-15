@@ -81,8 +81,8 @@ export default {
 			lyricIndex:0,
 			lyricScrollInterval:null,
 			isLycMove:true,
-			nolyc:false
-
+			nolyc:false,
+			lycContainerHeight:0
 		}
 	},
 	computed:{
@@ -101,14 +101,16 @@ export default {
 	},
 	methods:{
 		lycMoveCancel(){
-			this.isLycMove = false
+			if(this.isLycMove)
+				this.isLycMove = false
 		},
 		lycMoveBegin(){
-			this.isLycMove = true
+			if(!this.isLycMove)
+				this.isLycMove = true
 		},
 		beginInit(){
 			this.audio.addEventListener('timeupdate', () => {
-				if(!this.nolyc){
+				if(!this.nolyc && this.isLycMove){
 					var flagTime = this.lyrics.timeLine[this.lyricIndex]
 					if(this.audio.currentTime > flagTime && this.audio.currentTime < this.lyrics.timeLine[this.lyricIndex+1]){//自然播放情况
 						flagTime = this.lyrics.timeLine[this.lyricIndex++]
@@ -125,11 +127,12 @@ export default {
 			if(!lyrics) return {}
 			var lyc = {}
 			var timeAndLyric = lyrics.split('\n')
+			console.log(JSON.stringify(timeAndLyric));
 			if(lyrics.indexOf('[by') > -1){
 				timeAndLyric.shift()
 			}
 			var times = lyrics.match(/\d+:\d+.\d+/g)
-			for(var i in times){
+			for(let i = 0; i < times.length; i++){
 				var min = Number(String(times[i].match(/\d+/i)).slice(1)),
                 sec = Number(String(times[i].match(/\:\d+.\d+/i)).slice(1));
             	var time = (min * 60 + sec).toFixed(2);
@@ -138,12 +141,13 @@ export default {
 			return lyc;
 		},
 		lrcScroll(el,scrollPosition,time){
+			console.log("lrcScroll");
 			if(scrollPosition > this.$refs.lyc_ul.offsetHeight - el.offsetHeight){//到底了
 				scrollPosition = this.$refs.lyc_ul.offsetHeight - el.offsetHeight
 			}else if(scrollPosition < 0){
 				scrollPosition = 0
 			}
-			clearInterval(this.lyricScrollInterval)
+			// clearInterval(this.lyricScrollInterval)
 			var nowTop = el.scrollTop 
 			var moveLeagth = scrollPosition - nowTop
 			var step = moveLeagth / time * 16.7 
@@ -154,7 +158,7 @@ export default {
 				}else if(scrollPosition >= el.scrollTop && step < 0){
 					clearInterval(this.lyricScrollInterval)
 				}
-			},16.7)
+			},16.7)	
 		},
 		searchNowIndex(arr, key, low, high) {//查找
             if(key < arr[0]){
@@ -192,6 +196,7 @@ export default {
 			}
 		},
 		lyricIndex(val,oldValue){
+			console.log(val);
 			if(this.isLycMove)
 				this.lrcScroll(this.$refs.lyc_con, this.$refs.lyrics[val].offsetTop - 217, 400)	
 		},

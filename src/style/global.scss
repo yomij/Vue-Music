@@ -10,6 +10,10 @@ $menuBgC:rgb(245,245,247);
 $clickGray:rgb(230,231,234);
 $lightFontColor:rgb(117,117,117);
 
+$border:rgb(229,229,230);
+
+
+$bule:rgb(64,158,209);
 
 
 // palyer
@@ -37,6 +41,7 @@ ul li{
 
 input{
 	outline:none;
+    border:none;
 }
 
 .grayfont{

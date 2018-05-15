@@ -2,14 +2,13 @@
 	<div class="player">
 		<div class="audio">
 			<ul class="controls">
-				<li class="pre" ><i class="iconfont icon-048caozuo_xiayishou" ></i></li>
+				<li class="pre" @click="preOrNextPlay(true,playMode)"><i class="iconfont icon-048caozuo_xiayishou" ></i></li>
 				<li class="pauseAndPlay" @click="playAndPause" ><i class="iconfont" :class="{'icon-bofang':!isPlaying,'icon-zanting':isPlaying}"></i></li>
-				<li class="next"><i class="iconfont icon-048caozuo_xiayishou"></i></li>
+				<li class="next" @click="preOrNextPlay(false,playMode)"><i class="iconfont icon-048caozuo_xiayishou"></i></li>
 			</ul>
 
 			<div class="progressBar">
 				<div class="currentTime">{{currentTime}}</div>
-
 				<div class="progress" ref="progress">
 					<div class="bg" 
 					@click="adjTimeByClick">
@@ -81,14 +80,14 @@
 			</div>
 			<div class="tableContainer">
 				<table cellspacing="0">
-				<tr class="songInf" v-for="(song,index) in listeningList" :class="{double:index%2,songPick:index===pickedSong}" @dblclick="listen(song,index)" @click="songPicked(index)" >
-					<td class="playSymbol"><i class="iconfont" :class="{'icon-bofang':playingIndex === index &&isPlaying,'icon-zanting':playingIndex === index && !isPlaying}"></i></td>
-					<td class="songName">{{song.name}}<span class="grayfont" v-if="song.alia[0]">({{song.alia[0]}})</span><span class="quality">sq</span></td>
-					<td class="singer">{{song.ar[0].name}}</td>
-					<td class="source"><i class="iconfont icon-fabu"></i></td>
-					<td class="length">{{getSongDuration(song.dt/1000)}}</td>
-				</tr>
-			</table>
+					<tr class="songInf" v-for="(song,index) in listeningList" :class="{double:index%2,songPick:index===playingIndex}" @dblclick="listen(song,index)" @click="songPicked(index)" >
+						<td class="playSymbol"><i class="iconfont" :class="{'icon-bofang':playingIndex === index &&isPlaying,'icon-zanting':playingIndex === index && !isPlaying}"></i></td>
+						<td class="songName">{{song.name}}<span class="grayfont" v-if="song.alia[0]">({{song.alia[0]}})</span><span class="quality">sq</span></td>
+						<td class="singer">{{song.ar[0].name}}</td>
+						<td class="source"><i class="iconfont icon-fabu"></i></td>
+						<td class="length">{{getSongDuration(song.dt/1000)}}</td>
+					</tr>
+				</table>
 			</div>
 		</div>
 
@@ -118,9 +117,9 @@ export default {
 			playMode:0,//0 单曲循环
 			isPlayList:true,
 			isAdjing:false,
-			pickedSong: -1,
 			isSongListShow:false,
 			interval:null,
+			progressWidth:0
 		}
 	},
 	created(){
@@ -129,6 +128,10 @@ export default {
 	mounted(){
 		this.audio.addEventListener("timeupdate", this.progressUpdate.bind(this))
 		this.audio.volume = .1
+		this.progressWidth =  this.$refs.progress.offsetWidth
+		window.onresize = () =>{
+			this.progressWidth =  this.$refs.progress.offsetWidth
+		}
 	},
 	computed:{
 		isPlaying(){ 
@@ -144,7 +147,7 @@ export default {
 			return this.$store.state.listeningList
 		},
 		playingIndex(){
-			return this.$store.state.listeningList
+			return this.$store.state.playingIndex
 		}
 	},
 	methods:{
@@ -163,27 +166,66 @@ export default {
 			this.audio.pause()
 			this.$store.commit('pause')	
 		},
+		preOrNextPlay(isPre){//上一首
+			var length = this.listeningList.length
+			var index = this.playingIndex
+			if(this.playMode != 3){
+				if(isPre){
+    				if(index !== 0){
+    					this.$store.commit('changePlayingIndex', index - 1)
+    				}else{
+    					this.$store.commit('changePlayingIndex', length - 1)
+    				}
+    			}else{
+    				if(length - 1 !== index){
+    					this.$store.commit('changePlayingIndex', index + 1)
+    				}else{
+    					this.$store.commit('changePlayingIndex', 0)
+    				}
+    			}
+			}else{
+				var randomIndex = Math.floor(Math.random() * length)
+    			while(randomIndex == this.playingIndex){
+    				randomIndex = Math.floor(Math.random() * length)
+    			}
+    			this.$store.commit('changePlayingIndex', randomIndex)
+			}
+		},
 		changeMode(){
 			this.playMode = this.playMode++ % 4
 		},
 		progressUpdate(){
-			// console.log(this.$refs);
-			// if(this.duration === '00:00')
-			// 	this.duration = this.getSongDuration(this.audio.duration)
 			if(!this.isAdjing){
     			this.currentTime = this.getSongDuration(this.audio.currentTime)
-    			this.progress = (this.audio.currentTime / this.audio.duration ) * this.$refs.progress.offsetWidth //进度
+    			this.progress = (this.audio.currentTime / this.audio.duration ) * this.progressWidth //进度
     		}
-
     		if(this.audio.currentTime >= this.audio.duration){
+    			var length = this.listeningList.length
+				var index = this.playingIndex
     			switch(this.playMode) {
-    				case 0:
+    				case 0: //顺序播放
+    					if(length - 1 !== index){
+    						this.$store.commit('changePlayingIndex', index + 1)
+    					}
+    					break			
+    				case 1://列表循环
+    					if(length - 1 !== index){
+    						this.$store.commit('changePlayingIndex', index + 1)
+    					}else{
+    						this.$store.commit('changePlayingIndex', 0)
+    					}
+    					break
+    				case 2://单曲循环    				
     					this.audio.currentTime = 0
     					this.play()
-    					break;
-    				case 1:
-    					
-    					break;
+    					break
+    				case 3://随机播放 
+    					var randomIndex = Math.floor(Math.random() * length)
+    					while(randomIndex == this.playingIndex){
+    						randomIndex = Math.floor(Math.random() * length)
+    					}
+    					this.$store.commit('changePlayingIndex', randomIndex)
+    					break
     			}
     		}
 		},
@@ -199,7 +241,7 @@ export default {
 		},
 		adjTimeByClick(el){
 			this.progress=el.layerX
-			this.audio.currentTime= (el.layerX / this.$refs.progress.offsetWidth) * this.audio.duration
+			this.audio.currentTime= (el.layerX / this.progressWidth) * this.audio.duration
 		},
 		adjTimeBegin(){
 			console.log('test')
@@ -208,7 +250,7 @@ export default {
 		},
 		adjTimeFinish(el){
 			if(this.readyToMove){
-				this.audio.currentTime= (this.progress /  this.$refs.progress.offsetWidth) * this.audio.duration
+				this.audio.currentTime= (this.progress /  this.progressWidth) * this.audio.duration
 				this.readyToMove = false
 			}
 

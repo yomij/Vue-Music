@@ -1,20 +1,44 @@
 <template>
   <div class="v-nav" >
     <ul>
-      <li :class="{active:index === activeIndex}" @click="active(index)" v-for="(option,index) in options">
-        <router-link to="/" class="link" :class="{active:index === activeIndex}">{{option}}</router-link>
+      <li :class="{active:index === activeIndex}" @click="active(index)" v-for="(option,index) in options" :key="option.name">
+        <router-link :to="{name:'songlist',params:{id:'111111'}}" class="link" :class="{active:index === activeIndex}">{{option.name}}</router-link>
       </li> 
     </ul>
   </div>
 </template>
-
 <script>
 export default {
   name: 'vNav',
   props: {
     options: {
       type: Array,
-      default: () => ['个性推荐', '歌单', '主播电台', '排行榜', '歌手', '最新音乐']
+      default: () => [
+        {
+          name: '个性推荐',
+          link: ''
+        },
+        {
+          name: '歌单',
+          link: '/songlist'
+        },
+        {
+          name: '主播电台',
+          link: ''
+        },
+        {
+          name: '排行榜',
+          link: ''
+        },
+        {
+          name: '歌手',
+          link: ''
+        },
+        {
+          name: '最新音乐',
+          link: ''
+        },
+        ]
     }
   },
   data () {

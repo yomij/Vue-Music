@@ -168,6 +168,7 @@
 			line-height:$playerHeight;
 			text-align: center;
 			li{
+				cursor:pointer;
 				position:relative;
 				float:left;
 				background-color:rgb(232,60,60);

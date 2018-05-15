@@ -108,7 +108,7 @@ export default {
 		},
 		beginInit(){
 			this.audio.addEventListener('timeupdate', () => {
-				if(!this.nolyc){
+				if(!this.nolyc && this.isLycMove){
 					var flagTime = this.lyrics.timeLine[this.lyricIndex]
 					if(this.audio.currentTime > flagTime && this.audio.currentTime < this.lyrics.timeLine[this.lyricIndex+1]){//自然播放情况
 						flagTime = this.lyrics.timeLine[this.lyricIndex++]

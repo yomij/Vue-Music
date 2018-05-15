@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="banner" >
     <div class="imgs-container">
       <ul @mouseover="movePause"

@@ -3,6 +3,7 @@
     <!-- <banner :imgs="imgs"></banner> -->
 <!--     <img src="./assets/logo.png">
     <router-view/> -->
+    <!-- <loader ></loader> -->
     <div id="top">
       <top></top>
     </div>
@@ -57,7 +58,8 @@ export default {
     'play-interface':playingInterface,
     'small-playing':smallPlaying,
     'v-nav':vNav,
-    'default-right':defaultRight
+    'default-right':defaultRight,
+    // 'loader':loader
   },
   computed:{
     maximize(){
@@ -140,7 +142,6 @@ export default {
     height:100%;
     position:absolute;
     top:0;
-    padding:0 40px;
     max-width:1700px;
     min-width:1000px;
     width:100%;

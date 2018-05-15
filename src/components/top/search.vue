@@ -14,7 +14,7 @@
         <ul v-if="!searchText" class="hot-search">
           <li>热门搜索</li>
           <li
-            v-for=" item in hotSearch  ">
+            v-for="item in hotSearch" :key="item">
             {{ item }}
           </li>
         </ul>
@@ -75,7 +75,7 @@ export default {
       isSearching: false,
       isChoose: false,
       timeout: null,
-      hotSearch: [...'虐欢虐欢么么哒'],
+      hotSearch: [...'虐欢我真的难受'],
       searchResults: {},
       searchedText: ''
     }
@@ -159,8 +159,6 @@ $boxFontColor:rgb(194,104,104);
       position:absolute;
       left:$boxHeight/2;
       background-color:$boxColor;
-      outline:none;
-      border:none;
       color:$boxFontColor;
       height:$boxHeight;
       font-size:.9rem;
@@ -201,7 +199,7 @@ $boxFontColor:rgb(194,104,104);
       border-left-color: transparent;
       border-right-color: transparent;
       left: 50%;
-      transform: translate(-50%,-13px);
+      transform: translate(-50%,-95%);
     }
     .search-results ul{
 

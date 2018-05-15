@@ -6,6 +6,8 @@ import defaultRight from '../components/right/defaultRight'
 
 import recommend from '../components/right/recommend'
 
+import songlistInf from '../components/right/songlistInf'
+
 Vue.use(Router)
 
 export default new Router({
@@ -18,5 +20,9 @@ export default new Router({
 			path: '',
 			component: recommend
 		}]
+	}, {
+		path: '/songlist',
+		name: 'songlist',
+		component: songlistInf
 	}]
 })
