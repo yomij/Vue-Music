@@ -1,6 +1,6 @@
 <template>
 	<div class="single-comment">
-		<img class="user-avatar" :src="comment.user.avatarUrl">
+		<img class="user-avatar" :src="comment.user.avatarUrl + '?param=50y50'">
 		<div class="content">
 			<div class="main-content">
 				<p class="user-comment"><a class="user-name">{{comment.user.nickname}}:</a>{{comment.content}}</p>
@@ -76,10 +76,12 @@ export default {
 		.main-content{
 			.user-name{
 				color:rgb(90,141,223);
+				line-height: 23px;
 			}
 			.user-comment{
 				display:inline-block;
 				margin-bottom:10px;
+				line-height: 23px;
 			
 			}
 			.reply{

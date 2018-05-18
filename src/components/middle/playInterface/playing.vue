@@ -1,5 +1,5 @@
 <template>
-	<div class="playing">
+	<div class="playing" v-if="playingSong.id">
 		<div class="playing-bg" :style="{backgroundImage:'url(http://music.163.com/api/img/blur/'+playingSong.album.picId+'.jpg)'}" v-if="playingSong.id">
 		</div>
 		<div class="playing-container">
@@ -312,8 +312,7 @@ export default {
 	height:$userMenuHeight;
 	width:100%;
 	background-color:$mainColor;
-
-	i.minimize{
+	.minimize{
 		color:rgb(102,102,102);
 		z-index: 100;
 		text-align:center;
@@ -418,7 +417,7 @@ export default {
 					}
 				}
 				.extra-inf{
-					margin-top: 45px;
+					margin-top: 38px;
 					span{
 						margin-right: 20px;	
 					}

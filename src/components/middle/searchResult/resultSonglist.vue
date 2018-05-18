@@ -17,11 +17,11 @@
     	</li>
     </ul>
     <page
-    class="page"
-    :total="playlistCount"
-    :onePageNum="30"
-    @pageChange="searhSonglists"
-    v-if="playlistCount"
+      class="page"
+      :total="playlistCount"
+      :onePageNum="30"
+      @pageChange="searhSonglists"
+      v-if="playlistCount"
     ></page> 
   </div>
 </template>

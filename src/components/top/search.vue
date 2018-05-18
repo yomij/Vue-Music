@@ -26,6 +26,18 @@
         <div v-if="searchText" class="results">
           <div class="search-user">搜与"<span class="search-text">{{ searchText }}</span>"相关用户<i class="iconfont icon-jiantou"></i></div>
 
+          <ul v-if="searchResults.artists">
+            <li class="search-tip"><i class="iconfont icon-ren icon"></i>歌手</li>
+            <li
+              @click="setSinger(item.id)"
+              v-for="item in searchResults.artists"
+              class="get-list">
+                <span v-html="item.name"></span>
+<!--                 <span v-if="item.alias[0]" class="grayfont">({{item.alias[0]}})</span>-
+                <span v-html="item.artists[0].name"></span></li> -->
+              </li>
+          </ul>
+
           <ul v-if="searchResults.songs">
             <li class="search-tip"><i class="iconfont icon-yinle icon"></i>单曲</li>
             <li
@@ -142,6 +154,9 @@ export default {
     setPlaylist(id){
       this.$store.commit('minimize')
       this.$router.push({ name: 'songlist',query:{id:id}})
+    },
+    setSinger(id){
+      this.$router.push({ name: 'singerInf',query:{sid:id}})
     }
   },
   directives: {}
@@ -160,6 +175,7 @@ $boxFontColor:rgb(194,104,104);
   width:$searchWidth;
   height:$boxHeight;
   position:relative;
+  z-index:500;
   .search-box{
     position:relative;
     width:$searchWidth;
@@ -168,7 +184,7 @@ $boxFontColor:rgb(194,104,104);
     color:$boxFontColor;
     border-radius:$boxHeight;
     line-height:$boxHeight;
-
+    z-index:500;
     &.focus{
       color: #ffffff;
     }
@@ -195,6 +211,7 @@ $boxFontColor:rgb(194,104,104);
   }
 
   .result-box{
+    z-index:500;
     position:relative;
     width: $searchWidth;
     background-color: rgb(250,250,250);

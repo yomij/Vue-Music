@@ -2,8 +2,8 @@ import axios from 'axios'
 import urls from './apiURL'
 
 
-// axios.defaults.baseURL = 'http://47.100.63.34:3000';
-axios.defaults.baseURL = 'http://127.0.0.1:3000';
+axios.defaults.baseURL = 'http://47.100.63.34:3000';
+// axios.defaults.baseURL = 'http://127.0.0.1:3000';
 axios.defaults.timeout = 2500;
 
 function requestFactory(obj = {}) {

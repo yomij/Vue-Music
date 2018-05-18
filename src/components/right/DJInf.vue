@@ -1,24 +1,24 @@
 <template>
   <div class="dj-inf" >
     <div class="header" v-if="djRadio.id">
-      <img :src="djRadio.picUrl" >
+      <img :src="djRadio.picUrl + '?param=250y250'" >
       <div class="inf">
         <p class="title">
           <i class="icon">电台</i><span class="name">{{djRadio.name}}</span>
         </p>
         <p class="creatInf">
-          <img :src="djRadio.dj.avatarUrl">
+          <img :src="djRadio.dj.avatarUrl + '?param=50y50'">
           <span class="nickname">{{djRadio.dj.nickname}}</span>
         </p>
         <ul class="operate">
           <li>
-            <i class="iconfont icon-xingxing1"></i>订阅{{djRadio.subCount}}
+            <i class="iconfont icon-xingxing1"></i>订阅({{djRadio.subCount}})
           </li>
           <li class="btn play" @click="playAll">
               <i class="iconfont icon-bofang1"></i>播放全部
           </li> 
           <li>
-            <i class="iconfont icon-fenxiang"></i>分享{{djRadio.shareCount}}
+            <i class="iconfont icon-fenxiang"></i>分享({{djRadio.shareCount}})
           </li> 
         </ul>
 
@@ -61,7 +61,7 @@
           <div class="left">
             <div class="list index gray">{{djRadio.programCount - (page - 1) * 30 - index}}</div>
             <div  class="list cover">
-              <img :src="program.coverUrl">
+              <img :src="program.coverUrl + '?param=50y50'">
               <i class="play" :data-index="index"></i>
             </div>
 

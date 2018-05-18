@@ -119,7 +119,8 @@ export default {
               "id": song.al.id,
               "picUrl":song.al.picUrl
             },
-            "duration":song.dt
+            "duration":song.dt,
+            "source": '搜索'
           })
         })
       }else {
@@ -143,6 +144,7 @@ export default {
     top: 40px;
   }
   .filter,.song{
+    cursor:default;
     width:100%;
     min-height:38px;
     overflow: auto;

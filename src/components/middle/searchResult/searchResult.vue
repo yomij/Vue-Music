@@ -8,8 +8,14 @@
 	    	class="link" 
 	    	:to="{name:'resultSong',query: {st: searchText}}">单曲</router-link>
 		</li>
-	    <li class="normal" :class="{active:naxIndex === 1}" @click="">歌手</li>
-	    <li class="normal" :class="{active:naxIndex === 2}" @click="">专辑</li>
+	    <li class="normal" :class="{active:naxIndex === 1}">
+	    	<router-link 
+	    	class="link" 
+	    	:to="{ name: 'resultSinger', query: { st: searchText }}">歌手</router-link></li>
+	    <li class="normal" :class="{active:naxIndex === 2}">
+	    	<router-link 
+	    	class="link" 
+	    	:to="{ name: 'resultAlbum', query: { st: searchText }}">专辑</router-link></li>
 	    <li class="normal" :class="{active:naxIndex === 3}">
 	    	<router-link 
 	    	class="link" 
@@ -71,7 +77,7 @@ export default {
 	}
 	.nav{
 		width:100%;
-		border-bottom:2px $mainRed solid;
+		border-bottom:1px $mainRed solid;
 		height:38px;
 		
 		padding:0 40px;

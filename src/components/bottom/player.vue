@@ -2,14 +2,14 @@
 	<div class="player">
 		<div class="audio">
 			<ul class="controls">
-				<li class="pre" @click="preOrNextPlay(true,playMode)"><i class="iconfont icon-048caozuo_xiayishou" ></i></li>
+				<li class="pre" @click="preOrNextPlay(true)"><i class="iconfont icon-048caozuo_xiayishou" ></i></li>
 				<li class="pauseAndPlay" @click="playAndPause" ><i class="iconfont" :class="{'icon-bofang':!isPlaying,'icon-zanting':isPlaying}"></i></li>
-				<li class="next" @click="preOrNextPlay(false,playMode)"><i class="iconfont icon-048caozuo_xiayishou"></i></li>
+				<li class="next" @click="preOrNextPlay(false)"><i class="iconfont icon-048caozuo_xiayishou"></i></li>
 			</ul>
 
 			<div class="progressBar">
 				<div class="currentTime">{{currentTime}}</div>
-				<div class="progress" ref="progress">
+				<div class="progress" ref="progress" id="progress">
 					<div class="bg" 
 					@click="adjTimeByClick">
 						<div class="nowProgress"
@@ -55,11 +55,9 @@
 				<li class="lyricShow">
 					<i>词</i>
 				</li>
-				<li class="playList" @click="listeningListShow">
-					<div>
-						<i class="iconfont icon-liebiao2"></i>
-						<span>{{listeningList.length}}</span>
-					</div>
+				<li class="playList" @click="listeningListShow">					
+					<i class="iconfont icon-liebiao2"></i>
+					<span>{{listeningList.length}}</span>					
 				</li>
 			</ul>
 		</div>
@@ -124,7 +122,6 @@ export default {
 			isAdjing:false,
 			isSongListShow:false,
 			interval:null,
-			progressWidth:0
 		}
 	},
 	created(){
@@ -133,7 +130,6 @@ export default {
 	mounted(){
 		this.audio.addEventListener("timeupdate", throttle(this.progressUpdate,500))
 		this.audio.volume = .1
-		this.progressWidth =  this.$refs.progress.offsetWidth
 	},
 	computed:{
 		isPlaying(){ 
@@ -149,7 +145,8 @@ export default {
 			return this.$store.state.listeningList
 		},
 		playingIndex(){
-			return this.$store.state.playingIndex
+			console.log('playingIndex变化',this.$store.state.playingIndex);
+			return Number(this.$store.state.playingIndex)
 		}
 	},
 	methods:{
@@ -168,7 +165,7 @@ export default {
 			this.audio.pause()
 			this.$store.commit('pause')	
 		},
-		preOrNextPlay(isPre){//上一首
+		preOrNextPlay(isPre = false){//上一首
 			var length = this.listeningList.length
 			var index = this.playingIndex
 			if(this.playMode != 3){
@@ -257,17 +254,19 @@ export default {
 		},
 		adjTimeByClick(el){
 			this.progress=el.layerX
-			this.audio.currentTime= (el.layerX / this.progressWidth) * this.audio.duration
+			this.audio.currentTime= (el.layerX / this.$refs.progress.offsetWidth) * this.audio.duration
 			this.play()
 		},
 		adjTimeBegin(){
-			console.log('test')
-			this.readyToMove = true
-			this.isAdjing = true
+			if(this.playingSong.id){
+				this.readyToMove = true
+				this.isAdjing = true
+			}
+
 		},
 		adjTimeFinish(el){
 			if(this.readyToMove){
-				this.audio.currentTime= (this.progress /  this.progressWidth) * this.audio.duration
+				this.audio.currentTime= (this.progress /  this.$refs.progress.offsetWidth) * this.audio.duration
 				this.readyToMove = false
 			}
 			this.isAdjing = false
@@ -276,7 +275,7 @@ export default {
 		},
 		adjTimeByMove(el){
 			var left = this.$refs.progress.getBoundingClientRect().left
-			if(this.readyToMove && el.clientX > left){
+			if(this.readyToMove && el.clientX > left && (el.clientX - left) < this.$refs.progress.offsetWidth){
 				this.progress = el.clientX - left
 			}
 			el.cancelBubble = true
@@ -336,7 +335,7 @@ export default {
 			}
 		},
 		listeningListShow(){
-			console.log('test')
+			// console.log('test')
 			this.isSongListShow ? this.isSongListShow = false : this.isSongListShow = true
 		},
 		songPicked(index){
@@ -354,7 +353,7 @@ export default {
 			console.log('歌曲准备播放');
 			this.duration = this.getSongDuration(val.duration/1000)
 			this.audio.src = `http://music.163.com/song/media/outer/url?id=${val.id}.mp3`
-			console.log(this.audio.src);
+			// console.log(this.audio.src);
 			this.audio.addEventListener('durationchange', this.songPlay)			
 		}
 	}

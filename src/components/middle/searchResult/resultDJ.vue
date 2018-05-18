@@ -6,11 +6,7 @@
         <li class="list-cover"  v-for="(djRadio,index) in djRadios"
         :class="{nomargin:(index + 1) % x === 0}" 
         :style="{'marginRight':margin+'px'}">
-            <div class="cover" :data-rid="djRadio.id" :style="{backgroundImage:'url('+ djRadio.picUrl +')'}">
-                <p class="playcount">
-                    <i class="iconfont icon-xingxing1"></i>
-                    {{djRadio.subCount > 100000 ? (djRadio.subCount / 10000).toFixed(0) + '万' : djRadio.subCount.toFixed(0)}}
-                </p>
+            <div class="cover" :data-rid="djRadio.id" :style="{backgroundImage:'url('+ djRadio.picUrl +'?param=250y250)'}">
             </div>
             <div class="title">
                 <p class="name" :data-rid="djRadio.id" v-html="djRadio.name"></p> 
@@ -63,7 +59,7 @@ export default {
         let rd = this.$refs.rd.offsetWidth - 80
         let x = ~~((this.$refs.rd.offsetWidth + 20) / 200)
         this.x = x
-        this.margin = (rd - 180 * x) / (x - 1)
+        this.margin = (rd - 181 * x) / (x - 1)
         console.log('计算margin');
     },300)
     this.debounceFunc()
@@ -159,21 +155,6 @@ export default {
             position:relative;
             background-position:center;
             background-size:100% 100%;
-            p{
-                &.playcount{
-                    text-align:right;
-                    width:60%;
-                    position:absolute;
-                    right:0;
-                    padding:5px;
-                    background:linear-gradient(left, transparent , rgba(0,0,0,.15));
-                    color:#fff;
-                    font-size:15px;
-                    i{
-                        margin-right:5px;
-                    }
-                }
-            }
 
         }
         div.title{

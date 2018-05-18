@@ -135,7 +135,7 @@ export default {
 @import '../../style/global.scss';
 $topHeight:62px;
 .top{
-  z-index:100;
+  z-index:300;
   height:$topHeight;
   background-color:rgb(198,47,47);
   position:relative;

@@ -34,7 +34,7 @@ export default {
         },
         {
           name: '歌手',
-          link: ''
+          link: '/singers'
         },
         {
           name: '最新音乐',
@@ -46,7 +46,7 @@ export default {
   data(){
     return {
       navAcive: 0,
-      navName: ['default', 'songlists', 'dj','ranking']
+      navName: ['default', 'songlists', 'dj','ranking', 'singers']
     }
   },
   // computed:{

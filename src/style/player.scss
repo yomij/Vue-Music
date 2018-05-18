@@ -206,6 +206,7 @@
 				i{	
 					display:block;
 					transform:rotate(180deg);
+					line-height: 35px;
 				}
 				left:30px !important;
 			}
@@ -218,6 +219,9 @@
 				left:60px;
 				i{
 					font-size:25px;
+					line-height: 50px;
+					position: relative;
+					left:1px;
 				}
 			}
 			.next{
@@ -271,7 +275,9 @@
 				&.playList{
 					margin-left:20px;
 					i{
+						display: inline-block;
 						font-size:20px;
+						transform:translate(1px,3px);
 					}
 					span{
 						position:absolute;

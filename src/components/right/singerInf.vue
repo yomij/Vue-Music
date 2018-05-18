@@ -1,7 +1,7 @@
 <template>
   <div class="singer-inf" >
     <div class="header" >
-      <img :src="artist.img1v1Url" >
+      <img :src="artist.img1v1Url + '?param=250y250'" >
       <div class="inf">
         <div class="title">
           <i class="icon">歌手</i><span class="name">{{artist.name}}</span>
@@ -49,7 +49,10 @@
       <div class="albums-container">
         <div class="hot">
           <div class="cover">
-            <img :src="artist.img1v1Url" >
+            <div class="bg">
+              <p>Top</p>
+              <p>50</p>
+            </div>
           </div>
           <div class="songs-container">
             <div class="title">
@@ -63,7 +66,7 @@
               <li v-for="(song,index) in hotSongs" v-if="index < nowListNum" :data-index="index">
                 <div class="left">
                   <span class="list index gray">
-                  {{index + 1 > 9 ? index + 1 : `0${index + 1}`}}
+                  {{ index + 1 > 9 ? index + 1 : `0${index + 1}` }}
                   </span>
                   <div class="list op gray">
                     <i class="iconfont icon-cpxihuanxiantiao"></i>
@@ -85,11 +88,16 @@
             </a>
           </div>
         </div>
-
+        
+        <div class="headline">
+          <h2>Albums</h2>
+        </div>
         <ul class="albums">
-          <li v-for="(album,index) in albums" :data-aid="album.id">
+          <li v-for="(album,index) in albums" :data-aid="album.id" :class="{'albums-s-flag': index === albums.length - 4}">
             <div class="list">
-              <img :src="album.picUrl+'?param=60y60'">
+              <router-link :to="{path:'/albumInf',query:{aid:album.id}}">
+                <img :src="album.picUrl + '?param=60y60'">
+              </router-link>             
               <span v-html="album.name"></span>
             </div>
             <div class="list gray">
@@ -99,9 +107,7 @@
               发行时间:{{transPublish(album.publishTime)}}
             </div>
           </li>
-        </ul>
-        
-
+        </ul>        
       </div>
 
       
@@ -131,22 +137,33 @@ export default {
       activeIndex: 0,
       nowListNum: 10,
       canPlayIndex: 0,
-      albums: [{"songs":[],"paid":false,"onSale":false,"blurPicUrl":"http://p4.music.126.net/A8qicH14toObbLpPMiKmBw==/109951163110962030.jpg","companyId":0,"pic":109951163110962030,"picId":109951163110962030,"artist":{"img1v1Id":18686200114669622,"topicPerson":0,"picId":109951163111196186,"alias":["Jay Chou"],"trans":"","albumSize":32,"img1v1Url":"http://p4.music.126.net/VnZiScyynLG7atLIZ2YPkw==/18686200114669622.jpg","briefDesc":"","picUrl":"http://p4.music.126.net/ql3nSwy0XKow_HAoZzRZgw==/109951163111196186.jpg","musicSize":469,"name":"周杰伦","id":6452,"picId_str":"109951163111196186","img1v1Id_str":"18686200114669622"},"artists":[{"img1v1Id":18686200114669622,"topicPerson":0,"picId":0,"alias":[],"trans":"","albumSize":0,"img1v1Url":"http://p4.music.126.net/VnZiScyynLG7atLIZ2YPkw==/18686200114669622.jpg","briefDesc":"","picUrl":"http://p3.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg","musicSize":0,"name":"周杰伦","id":6452,"img1v1Id_str":"18686200114669622"}],"copyrightId":1007,"publishTime":1516204800007,"company":"杰威尔","status":3,"description":"","subType":"录音室版","tags":"","alias":[],"commentThreadId":"R_AL_3_37251353","briefDesc":"","picUrl":"http://p3.music.126.net/A8qicH14toObbLpPMiKmBw==/109951163110962030.jpg","name":"等你下课","id":37251353,"type":"EP/Single","size":1,"picId_str":"109951163110962030","isSub":false},{"songs":[],"paid":false,"onSale":false,"blurPicUrl":"http://p4.music.126.net/cUTk0ewrQtYGP2YpPZoUng==/3265549553028224.jpg","companyId":0,"pic":3265549553028224,"picId":3265549553028224,"artist":{"img1v1Id":18686200114669622,"topicPerson":0,"picId":109951163111196186,"alias":["Jay Chou"],"trans":"","albumSize":32,"img1v1Url":"http://p3.music.126.net/VnZiScyynLG7atLIZ2YPkw==/18686200114669622.jpg","briefDesc":"","picUrl":"http://p3.music.126.net/ql3nSwy0XKow_HAoZzRZgw==/109951163111196186.jpg","musicSize":469,"name":"周杰伦","id":6452,"picId_str":"109951163111196186","img1v1Id_str":"18686200114669622"},"artists":[{"img1v1Id":18686200114669622,"topicPerson":0,"picId":0,"alias":[],"trans":"","albumSize":0,"img1v1Url":"http://p4.music.126.net/VnZiScyynLG7atLIZ2YPkw==/18686200114669622.jpg","briefDesc":"","picUrl":"http://p4.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg","musicSize":0,"name":"周杰伦","id":6452,"img1v1Id_str":"18686200114669622"}],"copyrightId":1007,"publishTime":1466697600007,"company":"杰威尔","status":3,"description":"","subType":"录音室版","tags":"","alias":["Jay Chou's Bedtime Stories"],"commentThreadId":"R_AL_3_34720827","briefDesc":"","picUrl":"http://p4.music.126.net/cUTk0ewrQtYGP2YpPZoUng==/3265549553028224.jpg","name":"周杰伦的床边故事","id":34720827,"type":"专辑","size":10,"isSub":false},{"songs":[],"paid":false,"onSale":false,"blurPicUrl":"http://p3.music.126.net/7z8fYsT325G8-KdpWtHd5Q==/1398578800308223.jpg","companyId":0,"pic":1398578800308223,"picId":1398578800308223,"artist":{"img1v1Id":18686200114669622,"topicPerson":0,"picId":109951163111196186,"alias":["Jay Chou"],"trans":"","albumSize":32,"img1v1Url":"http://p4.music.126.net/VnZiScyynLG7atLIZ2YPkw==/18686200114669622.jpg","briefDesc":"","picUrl":"http://p4.music.126.net/ql3nSwy0XKow_HAoZzRZgw==/109951163111196186.jpg","musicSize":469,"name":"周杰伦","id":6452,"picId_str":"109951163111196186","img1v1Id_str":"18686200114669622"},"artists":[{"img1v1Id":18686200114669622,"topicPerson":0,"picId":0,"alias":[],"trans":"","albumSize":0,"img1v1Url":"http://p4.music.126.net/VnZiScyynLG7atLIZ2YPkw==/18686200114669622.jpg","briefDesc":"","picUrl":"http://p4.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg","musicSize":0,"name":"周杰伦","id":6452,"img1v1Id_str":"18686200114669622"}],"copyrightId":1007,"publishTime":1462809600007,"company":"杰威尔","status":3,"description":"","subType":"现场版","tags":"","alias":[],"commentThreadId":"R_AL_3_34685590","briefDesc":"","picUrl":"http://p4.music.126.net/7z8fYsT325G8-KdpWtHd5Q==/1398578800308223.jpg","name":"魔天伦 世界巡回演唱会","id":34685590,"type":"专辑","size":22,"isSub":false}]
+      albums: [],
+      more: true,
+      isReqing: false
     }
 
   },
-  created() { 
-    this.getSingerInf()
+  computed:{
+    scrollTop(){
+      return this.$store.state.scrollTop
+    },
+  },
+  created() {
+    let id = this.$route.query.sid 
+    this.getSingerInf(id)
+    this.getSingerAlbum(id,10,0)
   },
   methods: {
-    getSingerInf(){
+    getSingerInf(id){
+      this.hotSongs= []
       request.artistInf({
-        id: 6452
+        id: id
       }).then(res => {
+        let hotSongsLength = res.data.hotSongs.length
         this.artist = res.data.artist
-        // this.hotSongs = res.data.hotSongs
+        this.canPlayIndex  = hotSongsLength
         res.data.hotSongs.forEach((song, index)=> {
-          if(song.privilege.sp <= 0 && !this.canPlayIndex){ //前面的为可以播放的
+          if(song.privilege.sp <= 0 && this.canPlayIndex === hotSongsLength){ //前面的为可以播放的
             this.canPlayIndex = index
           } 
           this.hotSongs.push({
@@ -169,11 +186,24 @@ export default {
         })
       })
     },
+    getSingerAlbum(id, limit = 10, offset){
+      if(this.more){
+        request.artistAlbum({
+          id: id,
+          limit: limit,
+          offset: offset
+        }).then(res => {
+          this.albums.push(...res.data.hotAlbums)
+          this.more = res.data.more
+          this.isReqing = false
+        })
+      }
+    },
     transDuration(duration){
       return time.transDuration(duration)
     },
     transPublish(t){
-      return time.formatDate(t,'-')
+      return time.formatDate(t, '-')
     },
     showAllHot(){
       this.nowListNum = this.hotSongs.length
@@ -183,10 +213,11 @@ export default {
       let index = node.dataset.index 
       console.log(index);
       if(index > -1){ 
-        console.log("listen");
+
         if(this.hotSongs[index].privilege){
-          this.$store.commit('changeListeningList',this.hotSongs.slice(0, this.canPlayIndex))
-          this.$store.commit('changePlayingIndex',index) 
+          console.log("添加列表", this.canPlayIndex);
+          this.$store.commit('changeListeningList', this.hotSongs.slice(0, this.canPlayIndex))
+          this.$store.commit('changePlayingIndex', index) 
         }else{ 
           alert("没得资源")
         }
@@ -198,8 +229,17 @@ export default {
   },
   watch:{
     '$route' (to, from) {
-      // this.getData()
+      this.getSingerInf(to.query.sid)
     },
+    scrollTop (val) {
+      let flag = document.getElementsByClassName('albums-s-flag')[0];
+      if(val + window.innerHeight - 120 > flag.offsetTop && !this.isReqing && this.more){
+        this.isReqing = true
+        setTimeout(() => {
+          this.getSingerAlbum(this.$route.query.sid, 10, this.albums.length)
+        }, 30)
+      }
+    }
   }
 }
 </script>
@@ -323,10 +363,28 @@ export default {
         position: absolute;
         left: 0;
         width: 265px;
-        img{
+        .bg{
           width: 180px;
+          height: 180px;
           position: absolute;
+          background-color: rgb(53,53,53);
           left:0;
+          padding: 20px;
+          p{
+            color:#fff;
+            // font-weight: 700;
+            
+            width: 100%;
+            &:first-child{
+              font-size: 60px;
+              text-align: center;
+            }
+            &:last-child{
+              font-size: 60px;
+              padding-right: 20px;
+              text-align: right;
+            }
+          }
         }
       }
       .songs-container{
@@ -390,6 +448,17 @@ export default {
       .more{
         display: inline-block;
         margin: 10px 0;
+      }
+    }
+
+    .headline{
+      height:50px;
+      line-height:50px;
+      // margin-top:20px;
+      border-bottom:rgb(229,229,230) solid 1.2px;
+      margin:20px 10px;
+      h2{
+        float:left;
       }
     }
 

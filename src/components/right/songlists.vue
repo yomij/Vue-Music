@@ -12,12 +12,7 @@
               <i class="iconfont icon-diqiuquanqiu"></i>语种
             </p>
             <ul>
-              <li class="hasleft">华语</li>
-              <li>欧美</li>
-              <li>日语</li>
-              <li>韩语</li>
-              <li >粤语</li>
-              <li class="notop hasleft">小语种</li>
+              <li v-for="(tag,index) in tags.language" :data-tag="tag" :class="{hasleft:index % 5 === 0,notop:index > 4}">{{tag}}</li>
             </ul>
 
           </div>

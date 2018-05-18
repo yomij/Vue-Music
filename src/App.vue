@@ -63,24 +63,25 @@ export default {
     playingSong(){
       return this.$store.state.playingSong
     },
-    navIndex(){
-      return this.$store.state.navIndex
-    }
+    // navIndex(){
+    //   return this.$store.state.navIndex
+    // }
   },
   mounted (){
     this.$on('maximize',() => {
       this.maximize = true
     })
     this.hasScroll = throttle(() => {
+      console.log('scroll',this.$refs.right.scrollTop);
       this.$store.commit('scroll',this.$refs.right.scrollTop)
     },100)
   },
   methods:{
   },
   watch:{
-    navIndex(val){
+    '$route' (val) {
       let right = this.$refs.right
-      if(val === 2){
+      if(val.name === 'dj' || val.name === 'singerInf'){
         right.addEventListener('scroll', this.hasScroll)
       }else{
         right.removeEventListener('scroll', this.hasScroll)

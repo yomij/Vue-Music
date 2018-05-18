@@ -2,7 +2,7 @@
   <div class="songlist-inf" v-if="songlistInf">
     
     <div class="header">
-      <img :src="songlistInf.coverImgUrl" >
+      <img :src="songlistInf.coverImgUrl + '?param=250y250'" >
       <div class="inf">
         <p class="title">
           <i class="icon">歌单</i><span class="name">{{songlistInf.name}}</span>
@@ -92,7 +92,7 @@
             <div class="list title">{{song.name}}<span v-if="song.alias[0]" class="grayfont">({{song.alias[0]}})</span></div>
             <div class="list singer">{{singers(song.artists)}}</div>
             <div class="list album">{{song.album.name}}</div>
-            <div class="list duration">{{getSongDuration(song.duration / 1000)}}</div>
+            <div class="list duration">{{getSongDuration(song.duration)}}</div>
           </div>
         </div>
       </div>
@@ -137,6 +137,7 @@ import loader from '../loader'
 import page from '../page'
 
 import request from '../../request/request'
+import time from '../../utility/transTime'
 export default {
   name: 'songlistInf',
   components:{
@@ -227,19 +228,8 @@ export default {
           this.commentsCache[page] = this.latelyComments
       })
     },
-    trans(time){
-      // console.log(time);
-      if(time < 10){
-          return `0${time}`
-      }else{
-        return `${time}`
-      }
-    },
-    transDes(des){
-
-    },
-    getSongDuration(time){
-      return `${this.trans(~~(time / 60))}:${this.trans(~~(time % 60))}`
+    getSongDuration(t){
+      return time.transDuration(t)
     },
     listen(song){
       console.log("listen");

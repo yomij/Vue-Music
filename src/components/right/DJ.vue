@@ -17,7 +17,7 @@
 
 	      	<ul class="handpick-container">
 	      		<li class="list-cover" v-for="djRadio in handpickRadios">
-					<div class="cover" :data-rid="djRadio.id" :style="{backgroundImage:'url('+ djRadio.picUrl +')'}">
+					<div class="cover" :data-rid="djRadio.id" :style="{backgroundImage:'url('+ djRadio.picUrl +'?param=250y250)'}">
 					    <p class="playcount">
 					    	<i class="iconfont icon-xingxing1"></i>
 					    	{{djRadio.subCount > 100000 ? (djRadio.subCount / 10000).toFixed(0) + '万' : djRadio.subCount.toFixed(0)}}
@@ -35,7 +35,7 @@
 
 	      	<ul class="handpick-container">
 	      		<li class="list-cover" v-for="djRadio in handpickRadios">
-					<div class="cover" :data-rid="djRadio.id" :style="{backgroundImage:'url('+ djRadio.picUrl +')'}">
+					<div class="cover" :data-rid="djRadio.id" :style="{backgroundImage:'url('+ djRadio.picUrl +'?param=250y250)'}">
 					    <p class="playcount">
 					    	<i class="iconfont icon-xingxing1"></i>
 					    	{{djRadio.subCount > 100000 ? (djRadio.subCount / 10000).toFixed(0) + '万' : djRadio.subCount.toFixed(0)}}
@@ -141,6 +141,7 @@ export default {
 			var len = this.djRadios.length
 			var flag = document.getElementsByClassName('dj-radios-flag')[0]
 			console.log(val + window.innerHeight - 120,flag.offsetTop);
+			//120为top+player的固定高度
 			if(len > 0 && this.nowKind < 0){
 				if(val + window.innerHeight - 120 > flag.offsetTop && !this.isReqing){
 					this.isReqing = true

@@ -19,9 +19,9 @@ export default new vuex.Store({
 		audio: new Audio(),
 		maximize: false,
 		playingIndex: 0,
-		navIndex: 0, //当前激活的index
 		DJKinds: [],
-		scrollTop: 0
+		scrollTop: 0,
+		imgs: []
 	},
 	mutations: {
 		login(state, id) {
@@ -47,6 +47,9 @@ export default new vuex.Store({
 		minimize(state) {
 			state.maximize = false
 		},
+		setImgs(state, imgs) {
+			state.imgs = imgs
+		},
 		addSong(state, song) {
 			var ind = state.playingIndex
 			state.listeningList.splice(state.playingIndex++, 0, song)
@@ -59,6 +62,8 @@ export default new vuex.Store({
 		},
 		changePlayingIndex(state, index) {
 			state.playingIndex = index
+			console.log(index);
+			console.log(state.listeningList[index]);
 			state.playingSong = state.listeningList[index]
 		},
 		// addsonglistCache(state, ob) {
@@ -75,9 +80,6 @@ export default new vuex.Store({
 		// },
 		addRecommend(state, obj) {
 			state.recommends[obj.name] = obj.recommend
-		},
-		navAcive(state, index) {
-			state.navIndex = index
 		},
 		scroll(state, scrollTop) {
 			state.scrollTop = scrollTop
@@ -98,7 +100,6 @@ export default new vuex.Store({
 			state
 		}, song) {
 			let hasThis = false
-
 			for (let i = state.listeningList.length - 1; i > -1; i--) {
 				if (state.listeningList[i].hasOwnProperty('mainSong')) {
 					continue
@@ -109,7 +110,6 @@ export default new vuex.Store({
 					break
 				}
 			}
-
 
 			if (!hasThis) {
 				commit('addSong', song, state.playingIndex)

@@ -70,11 +70,20 @@ export default [{
 	url: '/comment/music',
 	mehod: 'get' //offset,limit,id
 }, {
-	name: 'commentDj',
+	name: 'commentDj',//dj评论
 	url: '/comment/Dj',
 	method: 'get' //id (programid)
 }, {
 	name: 'artistInf',
 	url: '/artists' //id
+},{
+	name: 'artistList',
+	url: '/artist/list' //cat
+},{
+	name: 'artistAlbum',
+	url: '/artist/album' //cat
+},{
+	name: 'album', //专辑信息
+	url:'/album',//id
 }]
 //  /dj/recommend/type?type=11 优秀新电台

@@ -45,7 +45,7 @@
 					<loader v-if="!dataReady" :bgc="'#6A6969'"></loader>
 					<ul v-if="dataReady">
 						<li class="songlist" v-for="songlist in similarSongList" @click="songlistInf(songlist.id)">
-							<img :src="songlist.coverImgUrl">
+							<img :src="songlist.coverImgUrl + '?param=50y50'">
 							<div class="list-inf">
 								<p>{{songlist.name}}</p>
 								<span class="grayfont">
@@ -75,7 +75,7 @@
 					<loader v-if="!dataReady" :bgc="'#6A6969'"></loader>
 					<ul v-if="dataReady">
 						<li class="user" v-for="(user,index) in similarUsers">
-          					<img :src="user.avatarUrl">
+          					<img :src="user.avatarUrl + '?param=50y50'">
           					<span class="nickname">
           						{{user.nickname}}
           						<i class="iconfont"
@@ -152,7 +152,7 @@ export default {
 			this.dataReady = false
 			if(!this.isDJ){
 				this.axios.get(`http://47.100.63.34:3000/comment/music?id=${id}`).then((res)=>{
-					console.log('get song comment',JSON.stringify(res.data));
+					// console.log('get song comment',JSON.stringify(res.data));
 					this.hotComments = res.data.hotComments
 					this.latelyComments = res.data.comments
 					this.total = res.data.total
@@ -242,8 +242,7 @@ export default {
 	overflow-y:scroll;
 	text-align:left;
 	background-color:$mainColor;
-	z-index:200;
-
+	z-index:5;
 	.bottom-container{
 		width:$mainWidth;
 		position:relative;

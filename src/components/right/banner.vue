@@ -66,9 +66,19 @@ export default {
     }
   },
   created () {
-    this.axios.get('http://localhost:3000/banner').then(res => {
+    let imgs = this.$store.state.imgs
+    console.log('test',imgs.length);
+    if(imgs.length){
+      this.imgs = this.$store.state.imgs
+      return
+    }
+    this.axios.get('http://47.100.63.34:3000/banner').then(res => {
+      console.log('aaaaaaaa');
       this.imgs = res.data.banners
+      this.$store.commit('setImgs',this.imgs)
     })
+    
+    
     this.moveBegin()
   },
   methods: {
@@ -160,7 +170,7 @@ export default {
       // left: $sidePicDistance;
       bottom: 0;
       margin:0 auto;
-      z-index: 10;
+      z-index: 3;
       // filter: grayscale(100%);
       @extend .pic;
       cursor:pointer;
@@ -182,7 +192,7 @@ export default {
         background-color:#000000;
         filter:alpha(50%);
         bottom:0;
-        z-index:20;
+        z-index:2;
      }
 
     }
@@ -211,7 +221,7 @@ export default {
         background-color:#000000;
         filter:alpha(50%);
         bottom:0;
-        z-index:20;
+        z-index:2;
      }
     }
     .imgs-control{
