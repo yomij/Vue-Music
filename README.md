@@ -2,6 +2,17 @@
 
 > A Vue.js project
 
+## 实现功能
+啦
+
+## 参考
+
+[网易云音乐api：Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
+[网易云音乐api分析获取](https://blog.csdn.net/qq_31673689/article/details/78615448)
+
+##实现截图
+
+
 ## Build Setup
 
 ``` bash
@@ -25,10 +36,3 @@ npm run e2e
 
 # run all tests
 npm test
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-=======
-# Vue-Music
-vue仿写网易云音乐
->>>>>>> b6120dad8179d64e1cc64626cd8e7ac48a0c9c4b
