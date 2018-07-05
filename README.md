@@ -2,7 +2,7 @@
 
 > A Vue.js project By yomi
 
-> 在线演示地址：http:www.yomij.cn/
+> 在线演示地址：http://www.yomij.cn/
 
 ## 实现功能
 啦
