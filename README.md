@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-# yomi
+# Vue 仿写网易云音乐PC客户端
 
 > A Vue.js project
 
