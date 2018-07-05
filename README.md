@@ -1,6 +1,7 @@
 # Vue 仿写网易云音乐PC客户端
 
 > A Vue.js project By yomi
+> 在线演示地址：http:www.yomij.cn/
 
 ## 实现功能
 啦
@@ -12,6 +13,11 @@
 [网易云音乐api分析获取](https://blog.csdn.net/qq_31673689/article/details/78615448)
 
 ## 实现截图
+
+
+## PS
+
+本demo仅作为个人学习使用
 
 
 ## Build Setup
